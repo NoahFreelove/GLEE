@@ -1,6 +1,7 @@
 package com.glee;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -8,6 +9,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.io.File;
 
@@ -25,6 +27,7 @@ public class Main extends Application {
         mainStage.setScene(empty);
         mainStage.show();
         Editor.openEditor(Editor.currentFile);
+        stage.addEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, windowEvent -> System.exit(0));
     }
 
     public static void loadMenu(){
