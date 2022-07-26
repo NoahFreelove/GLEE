@@ -19,7 +19,7 @@ public class InspectorPanel extends GridPane {
     private Text objectTag;
 
     private Accordion componentList;
-
+    private Text emptyText;
     public InspectorPanel() {
         super();
         this.setStyle("-fx-background-color: #868686;");
@@ -44,6 +44,10 @@ public class InspectorPanel extends GridPane {
         componentList = new Accordion();
 
         this.add(componentList, 0, 2);
+        emptyText = new Text("empty.");
+        emptyText.setTranslateX(10);
+        emptyText.setFill(Color.WHITE);
+        emptyText.setStyle("-fx-font-size: 15px;");
     }
 
     public void setSelectedObject(int index){
@@ -78,7 +82,14 @@ public class InspectorPanel extends GridPane {
                 box.getChildren().add(new Text("empty."));
             }
             componentList.getPanes().add(new TitledPane(c.getClass().getSimpleName(), box));
+        }
 
+        if(selectedObject.getComponents().size() == 0){
+            if(!this.getChildren().contains(emptyText)){
+                this.add(emptyText,0,3);
+            }
+        }else{
+            this.getChildren().remove(emptyText);
         }
     }
 }

@@ -9,7 +9,6 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 
 import java.io.File;
 
@@ -34,7 +33,6 @@ public class Editor {
         Scene scene = new Scene(root, 600, 800);
         scene.setFill(Color.WHITE);
         mainStage.setScene(scene);
-        mainStage.setTitle("GLEE Editor");
         mainStage.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
             if(e.getCode() == KeyCode.F5){
                 refresh();
@@ -44,27 +42,18 @@ public class Editor {
             }
         });
 
+        /*
         System.out.println(projectInfo.name);
         System.out.println(projectInfo.sourcePath);
-
-        Text title = new Text();
-        if(projectInfo.name.length() > 30){
-            title.setText(projectInfo.name.substring(0, 20) + "...");
-        }
-        else{
-            title.setText(projectInfo.name);
-        }
-        title.setLayoutX(10);
-        title.setLayoutY(40);
-        title.setFill(Color.BLACK);
-        title.setStyle("-fx-font-size: 30px;");
+        */
 
         inspectorPanel = new InspectorPanel();
         worldPanel = new WorldPanel();
         hierarchyPanel = new HierarchyPanel();
 
-        root.getChildren().addAll(title, inspectorPanel, worldPanel, hierarchyPanel);
+        root.getChildren().addAll(inspectorPanel, worldPanel, hierarchyPanel);
         addSampleGameObject();
+        refresh();
     }
 
     private static void addSampleGameObject(){
@@ -86,6 +75,19 @@ public class Editor {
         root.getChildren().remove(hierarchyPanel);
         hierarchyPanel = new HierarchyPanel();
         root.getChildren().add(hierarchyPanel);
+
+        root.getChildren().remove(inspectorPanel);
+        inspectorPanel = new InspectorPanel();
+        root.getChildren().add(inspectorPanel);
+
+        String titleText = "GLEE Editor";
+        if(projectInfo.name.length() > 30){
+            titleText = titleText + ": " + projectInfo.name.substring(0, 20) + "...";
+        }
+        else{
+            titleText = titleText + ": " + projectInfo.name;
+        }
+        mainStage.setTitle(titleText);
     }
 
     public static void loadWorld(File worldFile){
