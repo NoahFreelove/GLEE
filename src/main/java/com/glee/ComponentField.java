@@ -2,6 +2,7 @@ package com.glee;
 
 import GLEngine.Core.Objects.Components.Component;
 import GLEngine.Core.Objects.GameObject;
+import GLEngine.Core.Objects.Transform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;
@@ -24,6 +25,8 @@ public class ComponentField extends GridPane {
     private HBox valueBox;
     private Text valueText;
     private Component parentComp;
+
+    private double textFieldOffset = 10;
     public ComponentField(String name, String type, Object value, int modifiers, Component parentComp){
         super();
         this.setStyle("-fx-background-color: #868686;");
@@ -80,10 +83,10 @@ public class ComponentField extends GridPane {
                 try {
                     Field f = parentComp.getClass().getField(fieldName);
                     f.set(parentComp, Float.parseFloat(newValue));
-                }catch (Exception e){
-                }
+                }catch (Exception ignore){}
             });
-        }else if(value instanceof Boolean){
+        }
+        else if(value instanceof Boolean){
             n = new CheckBox();
             n.setTranslateX(10);
             ((CheckBox)n).setSelected((Boolean)value);
@@ -104,7 +107,8 @@ public class ComponentField extends GridPane {
                 });
             }
 
-        }else if(value instanceof Vector2f){
+        }
+        else if(value instanceof Vector2f){
             HBox hbox = new HBox();
             hbox.setSpacing(5);
             Text x = new Text("x");
@@ -113,16 +117,22 @@ public class ComponentField extends GridPane {
             TextField xField = new TextField(((Vector2f)value).x + "");
             xField.textProperty().addListener((observable, oldValue, newValue) -> {
                 try {
-                    Field f = parentComp.getClass().getField(fieldName);
-                    f.set(parentComp, Float.parseFloat(newValue));
+                    Field f = parentComp.getClass().getDeclaredField(fieldName);
+                    f.setAccessible(true);
+                    Vector2f vec = (Vector2f) f.get(parentComp);
+                    vec.x = Float.parseFloat(newValue);
+                    f.set(parentComp, vec);
                 } catch (Exception ignore){
                 }
             });
             TextField yField = new TextField(((Vector2f)value).y + "");
             yField.textProperty().addListener((observable, oldValue, newValue) -> {
                 try {
-                    Field f = parentComp.getClass().getField(fieldName);
-                    f.set(parentComp, Float.parseFloat(newValue));
+                    Field f = parentComp.getClass().getDeclaredField(fieldName);
+                    f.setAccessible(true);
+                    Vector2f vec = (Vector2f) f.get(parentComp);
+                    vec.y = Float.parseFloat(newValue);
+                    f.set(parentComp, vec);
                 } catch (Exception ignore){
 
                 }
@@ -131,7 +141,8 @@ public class ComponentField extends GridPane {
             yField.setPrefWidth(65);
             hbox.getChildren().addAll(x, xField, y, yField);
             n = hbox;
-        }else if(value instanceof Vector3f){
+        }
+        else if(value instanceof Vector3f){
             HBox hbox = new HBox();
             hbox.setSpacing(5);
             Text x = new Text("x");
@@ -139,35 +150,59 @@ public class ComponentField extends GridPane {
             Text y = new Text("y");
             Text z = new Text("z");
             TextField xField = new TextField(((Vector3f)value).x + "");
+
             xField.textProperty().addListener((observable, oldValue, newValue) -> {
                 try {
-                    Field f = parentComp.getClass().getField(fieldName);
-                    f.set(parentComp, Float.parseFloat(newValue));
-                } catch (Exception ignore){
-                }
+                    Field f = parentComp.getClass().getDeclaredField(fieldName);
+                    f.setAccessible(true);
+                    Vector3f vec = (Vector3f) f.get(parentComp);
+                    vec.x = Float.parseFloat(newValue);
+                    f.set(parentComp, vec);
+
+                } catch (Exception ignore){}
             });
             TextField yField = new TextField(((Vector3f)value).y + "");
             yField.textProperty().addListener((observable, oldValue, newValue) -> {
                 try {
-                    Field f = parentComp.getClass().getField(fieldName);
-                    f.set(parentComp, Float.parseFloat(newValue));
-                } catch (Exception ignore){
-                }
+                    Field f = parentComp.getClass().getDeclaredField(fieldName);
+                    f.setAccessible(true);
+                    Vector3f vec = (Vector3f) f.get(parentComp);
+                    vec.y = Float.parseFloat(newValue);
+                    f.set(parentComp, vec);
+
+                } catch (Exception ignore){}
             });
+
             TextField zField = new TextField(((Vector3f)value).z + "");
             zField.textProperty().addListener((observable, oldValue, newValue) -> {
                 try {
-                    Field f = parentComp.getClass().getField(fieldName);
-                    f.set(parentComp, Float.parseFloat(newValue));
-                } catch (Exception ignore){
-                }
+                    Field f = parentComp.getClass().getDeclaredField(fieldName);
+                    f.setAccessible(true);
+                    Vector3f vec = (Vector3f) f.get(parentComp);
+                    vec.z = Float.parseFloat(newValue);
+                    f.set(parentComp, vec);
+
+                } catch (Exception ignore){}
             });
+
             xField.setPrefWidth(65);
             yField.setPrefWidth(65);
             zField.setPrefWidth(65);
+
             hbox.getChildren().addAll(x, xField, y, yField, z, zField);
             n = hbox;
-        }else{
+        }
+        else if(value instanceof String){
+            n = new TextField((String)value);
+            n.setTranslateX(textFieldOffset);
+            ((TextField)n).textProperty().addListener((observable, oldValue, newValue) -> {
+                try {
+                    Field f = parentComp.getClass().getField(fieldName);
+                    f.set(parentComp, newValue);
+                } catch (Exception ignore){}
+            });
+        }
+        else{
             n = new TextField(value.toString());
             ((TextField)n).textProperty().addListener((observable, oldValue, newValue) -> {
                 try {
@@ -178,6 +213,7 @@ public class ComponentField extends GridPane {
         }
         return n;
     }
+
 
     private String convertValueToString(Object value){
         String converted = "";

@@ -8,7 +8,6 @@ module com.glee.glee {
     requires org.lwjgl.opengl;
     requires vecmath;
     requires org.lwjgl.glfw;
-    requires commons.beanutils;
 
     opens com.glee to javafx.fxml;
     exports com.glee;

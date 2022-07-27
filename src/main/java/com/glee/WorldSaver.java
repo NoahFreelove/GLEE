@@ -4,6 +4,7 @@ import GLEngine.Core.Interfaces.EditorVisible;
 import GLEngine.Core.Objects.Components.Component;
 import GLEngine.Core.Objects.GameObject;
 import GLEngine.Core.Objects.GameObjectSaveData;
+import GLEngine.Core.Objects.Transform;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
@@ -22,6 +23,16 @@ public class WorldSaver {
             FileWriter w = new FileWriter(newFile);
             for (GameObject go :
                     Editor.activeWorld.GameObjects()) {
+
+                for (Component c :
+                        go.getComponents()) {
+                    if (c instanceof Transform t) {
+                        go.setPosition(t.getPosition());
+                        go.setRotation(t.getRotation());
+                        go.setScale(t.getScale());
+                    }
+                }
+
                 GameObjectSaveData data = go.getSaveData();
 
                 w.write("///START GAMEOBJECT///\n");
@@ -35,6 +46,9 @@ public class WorldSaver {
 
                 for (Component c :
                         go.getComponents()) {
+                    if(c instanceof Transform)
+                        continue;
+
                     w.write("\n///COMP///\n");
                     w.write("CLASS \"" + c.getClass().getName() + "\"\n");
 

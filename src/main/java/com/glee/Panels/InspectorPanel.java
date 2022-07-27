@@ -3,20 +3,18 @@ package com.glee.Panels;
 import GLEngine.Core.Interfaces.EditorVisible;
 import GLEngine.Core.Objects.Components.Component;
 import GLEngine.Core.Objects.GameObject;
+import GLEngine.Core.Objects.Transform;
 import com.glee.ComponentField;
 import com.glee.Editor;
-import javafx.event.EventHandler;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.TitledPane;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.beanutils.BeanUtils.*;
+
 import java.lang.reflect.Field;
 
 public class InspectorPanel extends GridPane {
@@ -31,6 +29,8 @@ public class InspectorPanel extends GridPane {
     private Button deleteButton;
 
     private CopiedComponent copiedComponent;
+
+
     public InspectorPanel() {
         super();
         this.setStyle("-fx-background-color: #868686;");
@@ -81,54 +81,21 @@ public class InspectorPanel extends GridPane {
 
         for (Component c :
                 selectedObject.getComponents()) {
+            if(c == null)
+                continue;
             Field[] allFields = c.getClass().getDeclaredFields();
             VBox box = new VBox();
             HBox operationsBox = new HBox();
 
             operationsBox.setStyle("-fx-background-color: #868686;");
             Button deleteButtonComp = new Button("Delete Component");
-            deleteButtonComp.setOnMouseClicked(mouseEvent -> {
-                if(selectedObject !=null)
-                {
-                    selectedObject.removeComponent(c);
-                    setSelectedObject(index);
-                }
+            deleteButtonComp.setOnMouseClicked(mouseEvent -> deleteComponent(index, c));
 
-            });
             Button copyButtonComp = new Button("Copy Component Values");
-            copyButtonComp.setOnMouseClicked(mouseEvent -> {
-                if(selectedObject !=null)
-                {
-                    copiedComponent = new CopiedComponent(c, c.getClass());
-                }
-            });
+            copyButtonComp.setOnMouseClicked(mouseEvent -> copyComponent(c));
 
             Button pasteComponentButton = new Button("Paste Component Values");
-            pasteComponentButton.setOnMouseClicked(mouseEvent -> {
-                if(selectedObject !=null)
-                {
-                    if(copiedComponent != null){
-                        if(c.getClass() == copiedComponent.classType){
-                            int i = 0;
-                            for (Field f : copiedComponent.classType.getDeclaredFields()) {
-                                try {
-                                    f.setAccessible(true);
-                                    if(f.getName().equals(copiedComponent.classType.getDeclaredFields()[i].getName())){
-                                        Field privateField = copiedComponent.classType.getDeclaredFields()[i];
-                                        privateField.setAccessible(true);
-                                        //System.out.println("New value:" + f.get(c).toString());
-                                        f.set(c, privateField.get(copiedComponent.component));
-                                    }
-                                } catch (Exception e) {
-                                    System.out.println("Error pasting component values: " + e.getMessage());
-                                }
-                                i++;
-                            }
-                        }
-                    }
-                }
-                setSelectedObject(index);
-            });
+            pasteComponentButton.setOnMouseClicked(mouseEvent -> pasteComponent(index, c));
 
             operationsBox.getChildren().addAll(deleteButtonComp,new Text("       "),copyButtonComp, new Text("       "), pasteComponentButton);
             box.setStyle("-fx-padding: 0;");
@@ -139,9 +106,11 @@ public class InspectorPanel extends GridPane {
                 setObjectField(c, box, f);
             }
 
-            Field[] componentFields = Component.class.getDeclaredFields();
-            for (Field f : componentFields) {
-                setObjectField(c, box, f);
+            if(c.getClass() != Transform.class){
+                Field[] componentFields = Component.class.getDeclaredFields();
+                for (Field f : componentFields) {
+                    setObjectField(c, box, f);
+                }
             }
             box.getChildren().add(operationsBox);
 
@@ -171,6 +140,52 @@ public class InspectorPanel extends GridPane {
             }
         });
 
+        if(componentList.getPanes().size() > 0){
+            componentList.setExpandedPane(componentList.getPanes().get(0));
+        }
+
+
+    }
+
+    private void deleteComponent(int index, Component c) {
+        if(selectedObject !=null)
+        {
+            selectedObject.removeComponent(c);
+            setSelectedObject(index);
+        }
+    }
+
+    private void copyComponent(Component c) {
+        if(selectedObject !=null)
+        {
+            copiedComponent = new CopiedComponent(c, c.getClass());
+        }
+    }
+
+    private void pasteComponent(int index, Component c) {
+        if(selectedObject !=null)
+        {
+            if(copiedComponent != null){
+                if(c.getClass() == copiedComponent.classType){
+                    int i = 0;
+                    for (Field f : copiedComponent.classType.getDeclaredFields()) {
+                        try {
+                            f.setAccessible(true);
+                            if(f.getName().equals(copiedComponent.classType.getDeclaredFields()[i].getName())){
+                                Field privateField = copiedComponent.classType.getDeclaredFields()[i];
+                                privateField.setAccessible(true);
+                                //System.out.println("New value:" + f.get(c).toString());
+                                f.set(c, privateField.get(copiedComponent.component));
+                            }
+                        } catch (Exception e) {
+                            System.out.println("Error pasting component values: " + e.getMessage());
+                        }
+                        i++;
+                    }
+                }
+            }
+        }
+        setSelectedObject(index);
     }
 
     private void setObjectField(Component c, VBox box, Field f) {
@@ -180,6 +195,8 @@ public class InspectorPanel extends GridPane {
 
             if(f.isAnnotationPresent(EditorVisible.class)) {
                 Object obj = f.get(c);
+                if(obj == null)
+                    return;
                 ComponentField item = new ComponentField(f.getName(), obj.getClass().getSimpleName(), obj, modifiers, c);
                 box.getChildren().add(item);
             }

@@ -110,6 +110,8 @@ public class Editor {
     }
 
     public static void saveEditor() {
+        // Save to both file and temp file in case the previewer is currently previewing the temp file
         WorldSaver.saveWorld(projectInfo.sourcePath + "/" + worldName + ".txt");
+        WorldSaver.saveWorld(System.getenv("APPDATA") + "/GLEngine/temp");
     }
 }
