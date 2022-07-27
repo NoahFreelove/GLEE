@@ -4,6 +4,11 @@ import GLEngine.Core.Objects.Components.Physics.Rigidbody;
 import GLEngine.Core.Objects.GameObject;
 import GLEngine.Core.Worlds.World;
 import GLEngine.Core.Worlds.WorldLoader;
+import com.glee.Panels.EditorToolbar;
+import com.glee.Panels.HierarchyPanel;
+import com.glee.Panels.InspectorPanel;
+import com.glee.Panels.WorldPanel;
+import com.glee.TestComponents.RegisterTest;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
@@ -21,6 +26,7 @@ public class Editor {
     public static InspectorPanel inspectorPanel;
     public static WorldPanel worldPanel;
     public static HierarchyPanel hierarchyPanel;
+    public static EditorToolbar editorToolbar;
 
     private static Group root = new Group();
 
@@ -30,8 +36,9 @@ public class Editor {
         currentFile = openFile;
         GLEngineConnection.initializeConnection();
         root = new Group();
+        activeWorld = new World();
         Scene scene = new Scene(root, 600, 800);
-        scene.setFill(Color.WHITE);
+        scene.setFill(Color.BLACK);
         mainStage.setScene(scene);
         mainStage.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
             if(e.getCode() == KeyCode.F5){
@@ -50,8 +57,10 @@ public class Editor {
         inspectorPanel = new InspectorPanel();
         worldPanel = new WorldPanel();
         hierarchyPanel = new HierarchyPanel();
+        editorToolbar = new EditorToolbar();
 
-        root.getChildren().addAll(inspectorPanel, worldPanel, hierarchyPanel);
+        root.getChildren().addAll(inspectorPanel, worldPanel, hierarchyPanel, editorToolbar);
+
         addSampleGameObject();
         refresh();
     }
@@ -96,5 +105,9 @@ public class Editor {
         activeWorld = w;
         refresh();
         inspectorPanel.setSelectedObject(0);
+    }
+
+    public static void saveEditor() {
+        WorldSaver.saveWorld(projectInfo.sourcePath + "/worldtest.txt");
     }
 }

@@ -26,8 +26,11 @@ public class Main extends Application {
         mainStage.setTitle("GLEE");
         mainStage.setScene(empty);
         mainStage.show();
-        Editor.openEditor(Editor.currentFile);
         stage.addEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, windowEvent -> System.exit(0));
+
+        //loadMenu();
+        Editor.openEditor(Editor.currentFile);
+
     }
 
     public static void loadMenu(){
@@ -48,13 +51,7 @@ public class Main extends Application {
         Button openProject = new Button("Open Project");
         openProject.setOnAction(e -> {
             // Open file chooser and get file
-
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Open Project");
-            fileChooser.getExtensionFilters().addAll(
-                    new FileChooser.ExtensionFilter("GLEE Project", "*.glengine")
-            );
-            File file = fileChooser.showOpenDialog(mainStage);
+            File file = openProjectDialog();
             if(file != null){
                 Editor.openEditor(file);
             }
@@ -75,8 +72,17 @@ public class Main extends Application {
 
         root.getChildren().addAll(quitButton, openProject, title);
     }
+    public static File openProjectDialog(){
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Project");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("GLEE Project", "*.glengine")
+        );
+        return fileChooser.showOpenDialog(mainStage);
+    }
 
     public static void main(String[] args) {
         launch();
     }
+
 }

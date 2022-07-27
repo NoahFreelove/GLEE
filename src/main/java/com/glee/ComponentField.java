@@ -1,6 +1,13 @@
 package com.glee;
 
+import GLEngine.Core.Objects.Components.Component;
+import GLEngine.Core.Objects.GameObject;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.scene.Node;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Separator;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -15,12 +22,14 @@ public class ComponentField extends GridPane {
     private Text componentType;
     private HBox valueBox;
     private Text valueText;
-    public ComponentField(String name, String type, Object value, int modifiers){
+    private Component parentComp;
+    public ComponentField(String name, String type, Object value, int modifiers, Component parentComp){
         super();
         this.setStyle("-fx-background-color: #868686;");
         this.setPrefSize(250, 50);
         this.setLayoutX(350);
         this.setLayoutY(0);
+        this.parentComp = parentComp;
 
         //increase vertical max height
         this.setPrefHeight(100);
@@ -42,7 +51,9 @@ public class ComponentField extends GridPane {
         this.add(componentName, 0, 0);
         this.add(componentType, 0, 2);
         valueBox = new HBox();
-        valueBox.getChildren().add(valueText);
+        Node valueNode = generateSpecificField(value);
+        valueBox.getChildren().add(valueNode);
+
         this.add(valueBox, 0, 1);
         componentName.setStyle("-fx-font-size: 20px;");
         componentType.setStyle("-fx-font-size: 15px;");
@@ -54,9 +65,52 @@ public class ComponentField extends GridPane {
         componentType.setText(type + " :" + modifierStr);
         // add spacer
         Separator spacer = new Separator();
-        spacer.setPrefWidth(250);
+        spacer.setPrefWidth(400);
         spacer.setTranslateY(20);
         this.add(spacer, 0, 3);
+    }
+
+    private Node generateSpecificField(Object value) {
+        Node n;
+        if(value instanceof Integer || value instanceof Float || value instanceof Double){
+            n = new TextField(value.toString());
+        }else if(value instanceof Boolean){
+            n = new CheckBox();
+            n.setTranslateX(10);
+            ((CheckBox)n).setSelected((Boolean)value);
+            ((CheckBox)n).selectedProperty().addListener((observableValue, aBoolean, newValue) -> parentComp.setEnabled(newValue));
+
+        }else if(value instanceof Vector2f){
+            HBox hbox = new HBox();
+            hbox.setSpacing(5);
+            Text x = new Text("x");
+            x.setTranslateX(3);
+            Text y = new Text("y");
+            TextField xField = new TextField(((Vector2f)value).x + "");
+            TextField yField = new TextField(((Vector2f)value).y + "");
+            xField.setPrefWidth(65);
+            yField.setPrefWidth(65);
+            hbox.getChildren().addAll(x, xField, y, yField);
+            n = hbox;
+        }else if(value instanceof Vector3f){
+            HBox hbox = new HBox();
+            hbox.setSpacing(5);
+            Text x = new Text("x");
+            x.setTranslateX(3);
+            Text y = new Text("y");
+            Text z = new Text("z");
+            TextField xField = new TextField(((Vector3f)value).x + "");
+            TextField yField = new TextField(((Vector3f)value).y + "");
+            TextField zField = new TextField(((Vector3f)value).z + "");
+            xField.setPrefWidth(65);
+            yField.setPrefWidth(65);
+            zField.setPrefWidth(65);
+            hbox.getChildren().addAll(x, xField, y, yField, z, zField);
+            n = hbox;
+        }else{
+            n = new TextField(value.toString());
+        }
+        return n;
     }
 
     private String convertValueToString(Object value){

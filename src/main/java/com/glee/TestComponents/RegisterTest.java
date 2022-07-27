@@ -1,4 +1,4 @@
-package com.glee;
+package com.glee.TestComponents;
 
 import GLEngine.Core.Interfaces.EditorVisible;
 import GLEngine.Core.Objects.Components.Component;
@@ -10,5 +10,4 @@ public class RegisterTest extends Component {
     public Vector3f Rotation = new Vector3f(0,0,0);
     @EditorVisible
     public Vector3f Scale = new Vector3f(0,0,0);
-
 }

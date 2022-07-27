@@ -11,4 +11,8 @@ module com.glee.glee {
 
     opens com.glee to javafx.fxml;
     exports com.glee;
+    exports com.glee.Panels;
+    opens com.glee.Panels to javafx.fxml;
+    opens com.glee.TestComponents to javafx.fxml;
+    exports com.glee.TestComponents;
 }

@@ -1,0 +1,98 @@
+///START GAMEOBJECT///
+POS (0.0,-4.0,0.0)
+ROT (0.0,0.0,0.0)
+SCA (10.0,1.0,10.0)
+MOD "bin/cube.obj"
+TEX "bin/wall.png"
+NAME GameObject
+TAG Tag
+///END GAMEOBJECT///
+
+///START GAMEOBJECT///
+POS (-11.0,5.0,0.0)
+ROT (0.0,0.0,0.0)
+SCA (1.0,10.0,10.0)
+MOD "bin/cube.obj"
+TEX "bin/wall.png"
+NAME GameObject
+TAG Tag
+///END GAMEOBJECT///
+
+///START GAMEOBJECT///
+POS (11.0,5.0,0.0)
+ROT (0.0,0.0,0.0)
+SCA (1.0,10.0,10.0)
+MOD "bin/cube.obj"
+TEX "bin/wall.png"
+NAME GameObject
+TAG Tag
+///END GAMEOBJECT///
+
+///START GAMEOBJECT///
+POS (1.0,-3.0,0.0)
+ROT (0.0,0.0,0.0)
+SCA (0.5,0.2,1.0)
+MOD "bin/cube.obj"
+TEX "bin/wall.png"
+NAME GameObject
+TAG Tag
+///END GAMEOBJECT///
+
+///START GAMEOBJECT///
+POS (2.0,-2.8,0.0)
+ROT (0.0,0.0,0.0)
+SCA (0.5,0.2,1.0)
+MOD "bin/cube.obj"
+TEX "bin/wall.png"
+NAME GameObject
+TAG Tag
+///END GAMEOBJECT///
+
+///START GAMEOBJECT///
+POS (3.0,-2.6,0.0)
+ROT (0.0,0.0,0.0)
+SCA (0.5,0.2,1.0)
+MOD "bin/cube.obj"
+TEX "bin/wall.png"
+NAME GameObject
+TAG Tag
+///END GAMEOBJECT///
+
+///START GAMEOBJECT///
+POS (4.0,-2.4,0.0)
+ROT (0.0,0.0,0.0)
+SCA (0.5,0.2,1.0)
+MOD "bin/cube.obj"
+TEX "bin/wall.png"
+NAME GameObject
+TAG Tag
+///END GAMEOBJECT///
+
+///START GAMEOBJECT///
+POS (5.0,-2.2,0.0)
+ROT (0.0,0.0,0.0)
+SCA (0.5,0.2,1.0)
+MOD "bin/cube.obj"
+TEX "bin/wall.png"
+NAME SPECIAL
+TAG Tag
+
+///COMP///
+CLASS "com.glee.TestComponents.RegisterTest"
+FIELD "Position":5.0f,5.0f,25.0f:Vector3f
+FIELD "Rotation":0.0f,0.0f,0.0f:Vector3f
+FIELD "Scale":0.0f,0.0f,0.0f:Vector3f
+FIELD "enabled":true:boolean
+///END COMP///
+
+
+///COMP///
+CLASS "GLEngine.Core.Objects.Components.Physics.Rigidbody"
+FIELD "dimensions":1.0f,1.0f,1.0f:Vector3f
+FIELD "mass":1.0:Float
+FIELD "stepThreshold":5.0:Float
+FIELD "enabled":false:boolean
+///END COMP///
+
+///END GAMEOBJECT///
+
