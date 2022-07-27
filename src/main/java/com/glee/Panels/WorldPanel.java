@@ -29,10 +29,10 @@ public class WorldPanel extends GridPane {
 
         GridPane gridPane = new GridPane();
         ScrollPane sp = new ScrollPane(gridPane);
-        sp.setPrefSize(350, 130);
+        sp.setPrefSize(380, 130);
         sp.setTranslateY(20);
 
-        gridPane.setPrefWidth(350);
+        gridPane.setPrefWidth(380);
         gridPane.setPrefHeight(130);
         gridPane.setLayoutX(0);
         gridPane.setLayoutY(0);

@@ -19,19 +19,19 @@ public class EditorToolbar extends MenuBar {
         Menu play = new Menu("Play");
         Menu helpMenu = new Menu("Help");
 
-        MenuItem newItem = new MenuItem("New");
-        MenuItem openItem = new MenuItem("Open");
+        MenuItem newItem = new MenuItem("New World");
+        MenuItem openItem = new MenuItem("Open World");
         openItem.setOnAction(event -> {
             File file = openProjectDialog();
             if(file != null){
                 Editor.openEditor(file);
             }
         });
-        MenuItem saveItem = new MenuItem("Save");
+        MenuItem saveItem = new MenuItem("Save World");
         saveItem.setOnAction(event -> {
             Editor.saveEditor();
         });
-        MenuItem saveAsItem = new MenuItem("Save As");
+        MenuItem saveAsItem = new MenuItem("Save World As");
         MenuItem exitItem = new MenuItem("Exit");
         exitItem.setOnAction(event -> {
             System.exit(0);

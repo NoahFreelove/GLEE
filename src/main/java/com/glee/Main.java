@@ -1,7 +1,6 @@
 package com.glee;
 
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -29,7 +28,8 @@ public class Main extends Application {
         stage.addEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, windowEvent -> System.exit(0));
 
         //loadMenu();
-        Editor.openEditor(Editor.currentFile);
+        Editor.openEditor(Editor.projectFile);
+
 
     }
 

@@ -20,21 +20,24 @@ import java.io.File;
 import static com.glee.Main.mainStage;
 
 public class Editor {
-    public static File currentFile = new File("default.glengine");
-    public static ProjectInfo projectInfo = new ProjectInfo(currentFile);
+    public static File projectFile = new File("default.glengine");
+    public static ProjectInfo projectInfo = new ProjectInfo(projectFile);
 
     public static InspectorPanel inspectorPanel;
     public static WorldPanel worldPanel;
     public static HierarchyPanel hierarchyPanel;
     public static EditorToolbar editorToolbar;
+    public static String worldName = "";
 
     private static Group root = new Group();
 
     public static World activeWorld = new World();
 
     public static void openEditor(File openFile){
-        currentFile = openFile;
+        projectFile = openFile;
         GLEngineConnection.initializeConnection();
+        GLEngineConnection.startReadingFile();
+
         root = new Group();
         activeWorld = new World();
         Scene scene = new Scene(root, 600, 800);
@@ -49,11 +52,6 @@ public class Editor {
             }
         });
 
-        /*
-        System.out.println(projectInfo.name);
-        System.out.println(projectInfo.sourcePath);
-        */
-
         inspectorPanel = new InspectorPanel();
         worldPanel = new WorldPanel();
         hierarchyPanel = new HierarchyPanel();
@@ -61,7 +59,6 @@ public class Editor {
 
         root.getChildren().addAll(inspectorPanel, worldPanel, hierarchyPanel, editorToolbar);
 
-        addSampleGameObject();
         refresh();
     }
 
@@ -76,7 +73,7 @@ public class Editor {
         inspectorPanel.setSelectedObject(0);
     }
 
-    private static void refresh(){
+    public static void refresh(){
         root.getChildren().remove(worldPanel);
         worldPanel = new WorldPanel();
         root.getChildren().add(worldPanel);
@@ -100,14 +97,19 @@ public class Editor {
     }
 
     public static void loadWorld(File worldFile){
-        System.out.println(worldFile.getAbsolutePath());
         World w = WorldLoader.DummyWorld(worldFile.getAbsolutePath());
+
+        String[] fileParts = worldFile.getAbsolutePath().replace("\\", "/").split("/");
+        worldName = fileParts[fileParts.length - 1].split("\\.")[0];
+        //System.out.println(worldName);
         activeWorld = w;
         refresh();
         inspectorPanel.setSelectedObject(0);
+        GLEngineConnection.writeFile("FP:" + worldFile.getAbsolutePath(), "to");
+
     }
 
     public static void saveEditor() {
-        WorldSaver.saveWorld(projectInfo.sourcePath + "/worldtest.txt");
+        WorldSaver.saveWorld(projectInfo.sourcePath + "/" + worldName + ".txt");
     }
 }
