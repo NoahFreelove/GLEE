@@ -9,5 +9,5 @@ public class RegisterTest extends Component {
     @EditorVisible
     public Vector3f Rotation = new Vector3f(0,0,0);
     @EditorVisible
-    public Vector3f Scale = new Vector3f(0,0,0);
+    public boolean boolValue = false;
 }
