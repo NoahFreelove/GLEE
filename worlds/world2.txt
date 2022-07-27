@@ -19,7 +19,63 @@ FIELD "enabled":true:boolean
 ///COMP///
 CLASS "GLEngine.Core.Objects.Components.Physics.Rigidbody"
 FIELD "dimensions":1.0f,1.0f,1.0f:Vector3f
-FIELD "mass":5.52:Float
+FIELD "mass":125125.0:Float
+FIELD "stepThreshold":0.5:Float
+FIELD "enabled":true:boolean
+///END COMP///
+
+///END GAMEOBJECT///
+
+///START GAMEOBJECT///
+POS (5.0,-2.2,0.0)
+ROT (0.0,0.0,0.0)
+SCA (0.5,0.2,1.0)
+MOD "bin/cube.obj"
+TEX "bin/wall.png"
+NAME SPECIAL
+TAG THISISATAG
+
+///COMP///
+CLASS "com.glee.TestComponents.RegisterTest"
+FIELD "Position":5.0f,5.0f,25.0f:Vector3f
+FIELD "Rotation":0.0f,0.0f,0.0f:Vector3f
+FIELD "boolValue":true:Boolean
+FIELD "enabled":true:boolean
+///END COMP///
+
+
+///COMP///
+CLASS "GLEngine.Core.Objects.Components.Physics.Rigidbody"
+FIELD "dimensions":1.0f,1.0f,1.0f:Vector3f
+FIELD "mass":125125.0:Float
+FIELD "stepThreshold":0.5:Float
+FIELD "enabled":true:boolean
+///END COMP///
+
+///END GAMEOBJECT///
+
+///START GAMEOBJECT///
+POS (5.0,-2.2,0.0)
+ROT (0.0,0.0,0.0)
+SCA (0.5,0.2,1.0)
+MOD "bin/cube.obj"
+TEX "bin/wall.png"
+NAME SPECIAL
+TAG THISISATAG
+
+///COMP///
+CLASS "com.glee.TestComponents.RegisterTest"
+FIELD "Position":5.0f,5.0f,25.0f:Vector3f
+FIELD "Rotation":0.0f,0.0f,0.0f:Vector3f
+FIELD "boolValue":true:Boolean
+FIELD "enabled":true:boolean
+///END COMP///
+
+
+///COMP///
+CLASS "GLEngine.Core.Objects.Components.Physics.Rigidbody"
+FIELD "dimensions":1.0f,1.0f,1.0f:Vector3f
+FIELD "mass":125125.0:Float
 FIELD "stepThreshold":0.5:Float
 FIELD "enabled":true:boolean
 ///END COMP///

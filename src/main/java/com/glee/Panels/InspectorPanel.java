@@ -15,7 +15,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.BeanUtils.*;
 import java.lang.reflect.Field;
 
 public class InspectorPanel extends GridPane {
@@ -28,6 +29,8 @@ public class InspectorPanel extends GridPane {
     private Text emptyText;
 
     private Button deleteButton;
+
+    private CopiedComponent copiedComponent;
     public InspectorPanel() {
         super();
         this.setStyle("-fx-background-color: #868686;");
@@ -92,9 +95,42 @@ public class InspectorPanel extends GridPane {
                 }
 
             });
-            Button copyButtonComp = new Button("Copy Component");
+            Button copyButtonComp = new Button("Copy Component Values");
+            copyButtonComp.setOnMouseClicked(mouseEvent -> {
+                if(selectedObject !=null)
+                {
+                    copiedComponent = new CopiedComponent(c, c.getClass());
+                }
+            });
 
-            operationsBox.getChildren().addAll(deleteButtonComp,new Text("       "),copyButtonComp);
+            Button pasteComponentButton = new Button("Paste Component Values");
+            pasteComponentButton.setOnMouseClicked(mouseEvent -> {
+                if(selectedObject !=null)
+                {
+                    if(copiedComponent != null){
+                        if(c.getClass() == copiedComponent.classType){
+                            int i = 0;
+                            for (Field f : copiedComponent.classType.getDeclaredFields()) {
+                                try {
+                                    f.setAccessible(true);
+                                    if(f.getName().equals(copiedComponent.classType.getDeclaredFields()[i].getName())){
+                                        Field privateField = copiedComponent.classType.getDeclaredFields()[i];
+                                        privateField.setAccessible(true);
+                                        //System.out.println("New value:" + f.get(c).toString());
+                                        f.set(c, privateField.get(copiedComponent.component));
+                                    }
+                                } catch (Exception e) {
+                                    System.out.println("Error pasting component values: " + e.getMessage());
+                                }
+                                i++;
+                            }
+                        }
+                    }
+                }
+                setSelectedObject(index);
+            });
+
+            operationsBox.getChildren().addAll(deleteButtonComp,new Text("       "),copyButtonComp, new Text("       "), pasteComponentButton);
             box.setStyle("-fx-padding: 0;");
             box.setFillWidth(true);
             box.setPrefWidth(400);
