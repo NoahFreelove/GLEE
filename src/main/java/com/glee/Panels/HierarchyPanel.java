@@ -10,7 +10,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import org.joml.Quaternionf;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 public class HierarchyPanel extends GridPane {
@@ -18,7 +20,6 @@ public class HierarchyPanel extends GridPane {
     ArrayList<Node> children = new ArrayList<>();
     ScrollPane sp = new ScrollPane();
     GridPane gp = new GridPane();
-    Button searchButton;
     Button clearButton;
     public HierarchyPanel() {
         this.setStyle("-fx-background-color: #000000;");
@@ -41,21 +42,16 @@ public class HierarchyPanel extends GridPane {
         searchBox.setPrefWidth(200);
         searchBox.setStyle("-fx-background-color: #545454; -fx-text-fill: #ffffff;");
 
-        searchButton = new Button("Search");
-        this.add(searchButton, 0, 2);
-        searchButton.setTranslateX(10);
-        searchButton.setTranslateY(10);
-        searchButton.setPrefWidth(200);
-        searchButton.setStyle("-fx-background-color: #313131; -fx-text-fill: #ffffff;");
-
-        searchButton.setOnMouseClicked(event -> {
-            filter(searchBox.getText());
+        searchBox.textProperty().addListener((observable, oldValue, newValue) -> {
+            try {
+                filter(newValue);
+            } catch (Exception ignore){}
         });
 
         //clear button
         clearButton = new Button("Clear");
 
-        this.add(clearButton, 0, 3);
+        this.add(clearButton, 0, 2);
         clearButton.setTranslateX(10);
         clearButton.setTranslateY(10);
         clearButton.setPrefWidth(200);
@@ -105,7 +101,7 @@ public class HierarchyPanel extends GridPane {
         for(int i = 0; i < gp.getChildren().size(); i++){
             if(gp.getChildren().get(i) instanceof Button){
                 Button button = (Button) gp.getChildren().get(i);
-                if(button == searchButton || button == clearButton)
+                if(button == clearButton)
                     continue;
                 if(!button.getText().toLowerCase().contains(text.toLowerCase())){
                     gp.getChildren().remove(i);
