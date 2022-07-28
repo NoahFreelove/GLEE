@@ -26,7 +26,7 @@ public class HierarchyPanel extends GridPane {
     GridPane gp = new GridPane();
     Button clearButton;
     public HierarchyPanel() {
-        this.setStyle("-fx-background-color: #000000;");
+        this.setStyle("-fx-background-color: #424242;");
         this.setPrefSize(350, 625);
         this.setLayoutX(0);
         this.setLayoutY(25);
@@ -40,11 +40,12 @@ public class HierarchyPanel extends GridPane {
 
 
         TextField searchBox = new TextField();
+        searchBox.setPromptText("Search");
         this.add(searchBox, 0, 1);
         searchBox.setTranslateX(10);
         searchBox.setTranslateY(10);
         searchBox.setPrefWidth(200);
-        searchBox.setStyle("-fx-background-color: #545454; -fx-text-fill: #ffffff;");
+        searchBox.setStyle("-fx-background-color: #333333; -fx-text-fill: #ffffff;");
 
         searchBox.textProperty().addListener((observable, oldValue, newValue) -> {
             try {
@@ -59,7 +60,7 @@ public class HierarchyPanel extends GridPane {
         clearButton.setTranslateX(10);
         clearButton.setTranslateY(10);
         clearButton.setPrefWidth(200);
-        clearButton.setStyle("-fx-background-color: #313131; -fx-text-fill: #ffffff;");
+        clearButton.setStyle("-fx-background-color: #333333; -fx-text-fill: #ffffff;");
         clearButton.setOnMouseClicked(event -> {
             searchBox.setText("");
             filter("");
@@ -73,7 +74,7 @@ public class HierarchyPanel extends GridPane {
         sp.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
 
-        gp.setStyle("-fx-background-color: #313131;");
+        gp.setStyle("-fx-background-color: #545454;");
         gp.setPrefWidth(200);
         gp.setPrefHeight(450);
         this.add(sp, 0, 4);

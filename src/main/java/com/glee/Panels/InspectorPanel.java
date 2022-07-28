@@ -7,16 +7,14 @@ import GLEngine.Core.Objects.Transform;
 import com.glee.ComponentField;
 import com.glee.Editor;
 import GLEngine.Core.Shaders.MeshRenderProperties;
-import javafx.scene.control.Accordion;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TitledPane;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 
 public class InspectorPanel extends GridPane {
@@ -32,13 +30,26 @@ public class InspectorPanel extends GridPane {
 
     private CopiedComponent copiedComponent;
 
+    private ScrollPane sp = new ScrollPane();
+    private VBox spHolder = new VBox();
+
+    private TextField componentName;
+    private int currentSelection;
+
 
     public InspectorPanel() {
         super();
-        this.setStyle("-fx-background-color: #868686;");
+        this.setStyle("-fx-background-color: #545454;");
         this.setPrefSize(420, 650);
         this.setLayoutX(220);
         this.setLayoutY(0);
+        sp.hbarPolicyProperty().setValue(ScrollPane.ScrollBarPolicy.NEVER);
+        sp.vbarPolicyProperty().setValue(ScrollPane.ScrollBarPolicy.ALWAYS);
+
+        sp.setPrefWidth(400);
+        sp.setPrefHeight(600);
+        // set background color to transparent
+        sp.setStyle("-fx-background-color: #545454;");
 
         objectName = new TextField();
         objectTag = new TextField();
@@ -74,8 +85,37 @@ public class InspectorPanel extends GridPane {
         componentList = new Accordion();
         componentList.setPrefWidth(400);
         deleteButton.setVisible(false);
+        sp.setContent(componentList);
+        spHolder.getChildren().add(sp);
+        sp.setStyle("-fx-background: transparent; -fx-background-color: #545454;");
+        this.add(spHolder, 0, 2);
 
-        this.add(componentList, 0, 2);
+        Button addComponent = new Button("Add Component");
+        addComponent.setOnMouseClicked(event -> {
+            if (selectedObject != null) {
+                try {
+                    Class clazz = Class.forName(componentName.getText());
+                    Constructor<?> constructor = clazz.getConstructor();
+                    // Create instance of class without casting
+                    if(constructor.newInstance() instanceof Component c){
+                        selectedObject.addComponent(c);
+                        Editor.refresh();
+                        setSelectedObject(currentSelection);
+
+                        // set the last pane to expanded
+                        componentList.setExpandedPane(componentList.getPanes().get(componentList.getPanes().size() - 1));
+                    }
+                }
+                catch (Exception e){
+                    System.out.println("Could not add component: " + e.getMessage());
+                }
+            }
+        });
+        addComponent.setTranslateX(135);
+        componentName = new TextField();
+        componentName.setPromptText("Component Package");
+        this.add(addComponent,0,4);
+        this.add(componentName,0,3);
         emptyText = new Text("empty.");
         emptyText.setTranslateX(10);
         emptyText.setFill(Color.WHITE);
@@ -83,7 +123,7 @@ public class InspectorPanel extends GridPane {
     }
 
     public void setSelectedObject(int index){
-
+        currentSelection = index;
         try {
             selectedObject = Editor.activeWorld.GameObjects().get(index);
             deleteButton.setVisible(true);
@@ -137,7 +177,7 @@ public class InspectorPanel extends GridPane {
             if(box.getChildren().size() == 0){
                 box.getChildren().add(new Text("empty."));
             }
-            componentList.getPanes().add(new TitledPane(c.getClass().getSimpleName(), box));
+            componentList.getPanes().add(new TitledPane(c.getClass().getSimpleName().replaceAll("(.)([ A-Z])", "$1 $2"), box));
         }
 
         if(selectedObject.getComponents().size() == 0){

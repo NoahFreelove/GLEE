@@ -15,7 +15,7 @@ import java.io.File;
 public class WorldPanel extends GridPane {
     public WorldPanel() {
         super();
-        this.setStyle("-fx-background-color: #414141;");
+        this.setStyle("-fx-background-color: #3a3a3a;");
         this.setPrefSize(600, 150);
         this.setLayoutX(0);
         this.setLayoutY(650);
@@ -36,7 +36,7 @@ public class WorldPanel extends GridPane {
         gridPane.setPrefHeight(130);
         gridPane.setLayoutX(0);
         gridPane.setLayoutY(0);
-        gridPane.setStyle("-fx-background-color: #414141;");
+        gridPane.setStyle("-fx-background-color: #545454;");
 
         this.add(sp, 0, 1);
 
