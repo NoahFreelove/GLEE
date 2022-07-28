@@ -38,13 +38,10 @@ public class WorldPanel extends GridPane {
         gridPane.setLayoutY(0);
         gridPane.setStyle("-fx-background-color: #414141;");
 
-
         this.add(sp, 0, 1);
 
         //foreach file in directory
         String dir = Editor.projectInfo.sourcePath;
-
-        System.out.println(new File(dir));
         File[] files = new File(new File(dir).getParent()).listFiles();
         if(files == null)
             return;

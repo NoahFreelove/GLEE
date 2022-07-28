@@ -15,4 +15,6 @@ module com.glee.glee {
     opens com.glee.Panels to javafx.fxml;
     opens com.glee.TestComponents to javafx.fxml;
     exports com.glee.TestComponents;
+    exports GLEngine.Core.Shaders;
+    opens GLEngine.Core.Shaders to javafx.fxml;
 }

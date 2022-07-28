@@ -99,20 +99,25 @@ public class Editor {
 
     public static void loadWorld(File worldFile){
         World w = WorldLoader.DummyWorld(worldFile.getAbsolutePath());
-
         String[] fileParts = worldFile.getAbsolutePath().replace("\\", "/").split("/");
-        worldName = fileParts[fileParts.length - 1].split("\\.")[0];
+        worldName = fileParts[fileParts.length - 1].split("\\.")[0].replace("\n","");
         //System.out.println(worldName);
         activeWorld = w;
         refresh();
         inspectorPanel.setSelectedObject(0);
         GLEngineConnection.writeFile("FP:" + worldFile.getAbsolutePath()+"\nBIN:" + new File(projectInfo.binPath).getAbsolutePath(), "to");
-
     }
 
     public static void saveEditor() {
+        //System.out.println("1: " + projectInfo.sourcePath);
+        //System.out.println("2: " + worldName);
+        StringBuilder sb = new StringBuilder();
+        sb.append(projectInfo.sourcePath.trim());
+        sb.append(worldName.trim());
+        sb.append(".txt");
+        //System.out.println("3: " + sb);
         // Save to both file and temp file in case the previewer is currently previewing the temp file
-        WorldSaver.saveWorld(projectInfo.sourcePath + "/" + worldName + ".txt");
+        WorldSaver.saveWorld(sb.toString());
         WorldSaver.saveWorld(System.getenv("APPDATA") + "/GLEngine/temp");
     }
 }

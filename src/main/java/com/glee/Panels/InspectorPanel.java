@@ -6,8 +6,10 @@ import GLEngine.Core.Objects.GameObject;
 import GLEngine.Core.Objects.Transform;
 import com.glee.ComponentField;
 import com.glee.Editor;
+import GLEngine.Core.Shaders.MeshRenderProperties;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -20,8 +22,8 @@ import java.lang.reflect.Field;
 public class InspectorPanel extends GridPane {
     private GameObject selectedObject;
 
-    private Text objectName;
-    private Text objectTag;
+    private TextField objectName;
+    private TextField objectTag;
 
     private Accordion componentList;
     private Text emptyText;
@@ -38,13 +40,29 @@ public class InspectorPanel extends GridPane {
         this.setLayoutX(220);
         this.setLayoutY(0);
 
-        objectName = new Text();
-        objectTag = new Text();
+        objectName = new TextField();
+        objectTag = new TextField();
         deleteButton = new Button("Delete");
-        objectName.setFill(Color.WHITE);
-        objectTag.setFill(Color.WHITE);
-        objectTag.setTranslateX(10);
+        objectName.setStyle("-fx-background-color: #545454; -fx-text-fill: #ffffff; -fx-font: 10 arial;");
+        objectName.setMaxWidth(200);
+        objectName.setMaxHeight(10);
         objectName.setTranslateX(10);
+        objectName.setTranslateY(0);
+
+        objectTag.setStyle("-fx-background-color: #545454; -fx-text-fill: #ffffff; -fx-font: 10 arial;");;
+        objectTag.setMaxWidth(150);
+        objectTag.setTranslateX(10);
+        objectTag.setTranslateY(0);
+        objectName.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (selectedObject != null) {
+                selectedObject.setName(newValue);
+            }
+        });
+        objectTag.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (selectedObject != null) {
+                selectedObject.setTag(newValue);
+            }
+        });
 
         this.add(objectName, 0, 0);
         this.add(objectTag, 0, 1);
@@ -88,13 +106,13 @@ public class InspectorPanel extends GridPane {
             HBox operationsBox = new HBox();
 
             operationsBox.setStyle("-fx-background-color: #868686;");
-            Button deleteButtonComp = new Button("Delete Component");
+            Button deleteButtonComp = new Button("Delete Comp");
             deleteButtonComp.setOnMouseClicked(mouseEvent -> deleteComponent(index, c));
 
-            Button copyButtonComp = new Button("Copy Component Values");
+            Button copyButtonComp = new Button("Copy Values");
             copyButtonComp.setOnMouseClicked(mouseEvent -> copyComponent(c));
 
-            Button pasteComponentButton = new Button("Paste Component Values");
+            Button pasteComponentButton = new Button("Paste Values");
             pasteComponentButton.setOnMouseClicked(mouseEvent -> pasteComponent(index, c));
 
             operationsBox.getChildren().addAll(deleteButtonComp,new Text("       "),copyButtonComp, new Text("       "), pasteComponentButton);
@@ -106,12 +124,13 @@ public class InspectorPanel extends GridPane {
                 setObjectField(c, box, f);
             }
 
-            if(c.getClass() != Transform.class){
+            if(c.getClass() != Transform.class && c.getClass() != MeshRenderProperties.class){
                 Field[] componentFields = Component.class.getDeclaredFields();
                 for (Field f : componentFields) {
                     setObjectField(c, box, f);
                 }
             }
+
             box.getChildren().add(operationsBox);
 
 

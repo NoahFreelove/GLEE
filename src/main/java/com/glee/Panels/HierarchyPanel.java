@@ -1,6 +1,10 @@
 package com.glee.Panels;
 
 import GLEngine.Core.Objects.GameObject;
+import GLEngine.Core.Objects.GameObjectSaveData;
+import GLEngine.Core.Objects.Identity;
+import GLEngine.Core.Objects.Transform;
+import GLEngine.Core.Shaders.MeshRenderProperties;
 import com.glee.Editor;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
@@ -86,6 +90,21 @@ public class HierarchyPanel extends GridPane {
         }
 
         children.addAll(gp.getChildren());
+        Button newButton = new Button("New GameObject");
+        newButton.setOnMouseClicked(event -> {
+            GameObject newObject = new GameObject();
+            newObject.setIdentity(new Identity("New GameObject", "GameObject"));
+            newObject.addComponent(new Transform());
+            newObject.addComponent(new MeshRenderProperties("",""));
+            newObject.setSaveData(new GameObjectSaveData());
+            Editor.activeWorld.Add(newObject);
+            Editor.refresh();
+            Editor.inspectorPanel.setSelectedObject(Editor.activeWorld.GameObjects().size());
+
+        });
+        newButton.setTranslateY(30);
+        newButton.setTranslateX(10);
+        add(newButton, 0, 5);
     }
 
     private void filter(String text){

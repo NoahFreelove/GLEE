@@ -29,10 +29,10 @@ public class ProjectInfo {
                     name = formatted[1];
                 }
                 if(formatted[0].equals("source")){
-                    sourcePath = path + "\\" + formatted[1];
+                    sourcePath = path + "\\" + formatted[1].replace("\n", "");
                 }
                 if(formatted[0].equals("bin")){
-                    binPath = path + "\\" + formatted[1];
+                    binPath = path + "\\" + formatted[1].replace("\n", "");
                 }
             }
         }catch (Exception ignore){}

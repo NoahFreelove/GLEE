@@ -1,10 +1,6 @@
 package com.glee;
 
 import GLEngine.Core.Objects.Components.Component;
-import GLEngine.Core.Objects.GameObject;
-import GLEngine.Core.Objects.Transform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Separator;
@@ -27,7 +23,7 @@ public class ComponentField extends GridPane {
     private Text valueText;
     private Component parentComp;
 
-    private double textFieldOffset = 10;
+    private double fieldOffset = 12;
     public ComponentField(String name, String type, Object value, int modifiers, Component parentComp){
         super();
         this.setStyle("-fx-background-color: #868686;");
@@ -66,7 +62,7 @@ public class ComponentField extends GridPane {
 
         String modifierStr = generateModifierString(modifiers);
         name = name.substring(0, 1).toUpperCase() + name.substring(1);
-        componentName.setText(name);
+        componentName.setText(name.replaceAll("(.)([ A-Z])", "$1 $2"));
         componentType.setText(type + " :" + modifierStr);
         // add spacer
         Separator spacer = new Separator();
@@ -79,6 +75,7 @@ public class ComponentField extends GridPane {
         Node n;
         if(value instanceof Integer || value instanceof Float){
             n = new TextField(value.toString());
+            n.setTranslateX(fieldOffset);
             // Set value after finishing typing
             ((TextField)n).textProperty().addListener((observable, oldValue, newValue) -> {
                 try {
@@ -89,7 +86,7 @@ public class ComponentField extends GridPane {
         }
         else if(value instanceof Boolean){
             n = new CheckBox();
-            n.setTranslateX(10);
+            n.setTranslateX(fieldOffset);
             ((CheckBox)n).setSelected((Boolean)value);
             if(fieldName.equals("enabled"))
                 ((CheckBox)n).selectedProperty().addListener((observableValue, aBoolean, newValue) -> parentComp.setEnabled(newValue));
@@ -260,7 +257,7 @@ public class ComponentField extends GridPane {
         }
         else if(value instanceof String){
             n = new TextField((String)value);
-            n.setTranslateX(textFieldOffset);
+            n.setTranslateX(fieldOffset);
             ((TextField)n).textProperty().addListener((observable, oldValue, newValue) -> {
                 try {
                     Field f = parentComp.getClass().getField(fieldName);
@@ -270,6 +267,7 @@ public class ComponentField extends GridPane {
         }
         else{
             n = new TextField(value.toString());
+            n.setTranslateX(fieldOffset);
             ((TextField)n).textProperty().addListener((observable, oldValue, newValue) -> {
                 try {
                     Field f = parentComp.getClass().getField(fieldName);

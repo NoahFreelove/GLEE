@@ -1,68 +1,59 @@
 ///START GAMEOBJECT///
-POS (0,-4,0)
-
-ROT (0,0,0)
-
-SCA (10,1,10)
-
+POS (0.0,-4.0,0.0)
+ROT (0.0,0.0,0.0)
+SCA (10.0,1.0,10.0)
 MOD "cube.obj"
-
 TEX "wall.png"
-
 NAME Floor
-
+TAG Tag
 ///END GAMEOBJECT///
 
 ///START GAMEOBJECT///
-POS (-11,5,0)
-
-ROT (0,0,0)
-
-SCA (1,10,10)
-
+POS (-11.0,5.0,0.0)
+ROT (0.0,0.0,0.0)
+SCA (1.0,10.0,10.0)
 MOD "cube.obj"
-
 TEX "wall.png"
-
-NAME Left Wall
-
-///END GAMEOBJECT///
-
-
-///START GAMEOBJECT///
-POS (11,5,0)
-
-ROT (0,0,0)
-
-SCA (1,10,10)
-
-MOD "cube.obj"
-
-TEX "wall.png"
-
-NAME Right Wall
+NAME Wall2
+TAG Tag
 ///END GAMEOBJECT///
 
 ///START GAMEOBJECT///
-POS (5,-2.2,0)
-
-ROT (0,0,0)
-
-SCA (0.5,0.2,1)
-
+POS (11.0,5.0,0.0)
+ROT (0.0,0.0,0.0)
+SCA (1.0,10.0,10.0)
 MOD "cube.obj"
-
 TEX "wall.png"
+NAME Wall3
+TAG Tag
+///END GAMEOBJECT///
 
-NAME SPECIAL
+///START GAMEOBJECT///
+POS (5.0,-2.2,0.0)
+ROT (0.0,0.0,0.0)
+SCA (2.0,1.0,1.0)
+MOD "cube.obj"
+TEX "wall.png"
+NAME SpecialObject
+TAG Tag
 
 ///COMP///
 CLASS "com.glee.TestComponents.RegisterTest"
-FIELD "Quat":0.5f,1f,1.5f,2f:Quaternionf
+FIELD "floatTest":1.0:Float
+FIELD "stringTest"::String
+FIELD "boolValue":false:Boolean
+FIELD "quaternionTest":0.0f,0.0f,0.0f,0.0f:Quaternionf
+FIELD "enabled":true:boolean
 ///END COMP///
+
 
 ///COMP///
 CLASS "GLEngine.Core.Objects.Components.Physics.Rigidbody"
+FIELD "dimensions":1.0f,1.0f,1.0f:Vector3f
+FIELD "mass":1.0:Float
+FIELD "stepThreshold":0.5:Float
+FIELD "enabled":true:boolean
 ///END COMP///
 
 ///END GAMEOBJECT///
+

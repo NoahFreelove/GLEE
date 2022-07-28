@@ -5,6 +5,7 @@ import GLEngine.Core.Objects.Components.Component;
 import GLEngine.Core.Objects.GameObject;
 import GLEngine.Core.Objects.GameObjectSaveData;
 import GLEngine.Core.Objects.Transform;
+import GLEngine.Core.Shaders.MeshRenderProperties;
 import org.joml.Quaternionf;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -32,6 +33,10 @@ public class WorldSaver {
                         go.setRotation(t.getRotation());
                         go.setScale(t.getScale());
                     }
+                    if(c instanceof MeshRenderProperties mrp){
+                        go.getSaveData().texturePath = mrp.texturePath;
+                        go.getSaveData().modelPath = mrp.modelPath;
+                    }
                 }
 
                 GameObjectSaveData data = go.getSaveData();
@@ -42,12 +47,12 @@ public class WorldSaver {
                 w.write("SCA (" + go.getScale().x + "," + go.getScale().y + "," + go.getScale().z + ")\n");
                 w.write("MOD \"" + data.modelPath + "\"\n");
                 w.write("TEX \"" + data.texturePath + "\"\n");
-                w.write("NAME " + data.name + "\n");
-                w.write("TAG " + data.tag + "\n");
+                w.write("NAME " + go.getIdentity().getName() + "\n");
+                w.write("TAG " + go.getIdentity().getTag() + "\n");
 
                 for (Component c :
                         go.getComponents()) {
-                    if(c instanceof Transform)
+                    if(c instanceof Transform || c instanceof MeshRenderProperties)
                         continue;
 
                     w.write("\n///COMP///\n");

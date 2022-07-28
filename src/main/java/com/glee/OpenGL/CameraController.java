@@ -6,6 +6,7 @@ import GLEngine.Core.Input.MouseEvent;
 import GLEngine.Core.Objects.Components.Component;
 import GLEngine.Core.Objects.Components.Rendering.Camera;
 import GLEngine.Core.Objects.GameObject;
+import GLEngine.Core.Objects.Models.RenderSettings;
 import GLEngine.Core.Window;
 import GLEngine.Core.Worlds.WorldManager;
 import com.glee.GLEngineConnection;
@@ -26,6 +27,7 @@ public class CameraController extends Component {
     private float sprintSpeed = 20;
     private float mouseSpeed = 0.0005f;
     private long window;
+    private boolean isWireframe = false;
 
     private boolean lockMouse = true;
 
@@ -60,6 +62,10 @@ public class CameraController extends Component {
                     }else{
                         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
                     }
+                }
+                if(key == GLFW_KEY_1){
+                    isWireframe = !isWireframe;
+                    Window.GetInstance().setMasterRenderSettings(new RenderSettings(isWireframe,!isWireframe,true));
                 }
             }
         });

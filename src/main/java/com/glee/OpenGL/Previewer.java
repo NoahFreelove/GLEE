@@ -27,9 +27,8 @@ public class Previewer {
         worldPath = fpAndBin[0];
         binPath = fpAndBin[1];
 
-
-        System.out.println(worldPath);
-        System.out.println(binPath);
+        /*System.out.println(worldPath);
+        System.out.println(binPath);*/
 
         Window.CreateWindow(1920, 1080, () -> {
             loadWorld(worldPath, binPath);
