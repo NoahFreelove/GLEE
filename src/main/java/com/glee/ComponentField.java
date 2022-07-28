@@ -13,6 +13,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import org.joml.Quaternionf;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
@@ -192,6 +193,71 @@ public class ComponentField extends GridPane {
             hbox.getChildren().addAll(x, xField, y, yField, z, zField);
             n = hbox;
         }
+        else if(value instanceof Quaternionf){
+            HBox hbox = new HBox();
+            hbox.setSpacing(5);
+            Text x = new Text("x");
+            x.setTranslateX(3);
+            Text y = new Text("y");
+            Text z = new Text("z");
+            Text w = new Text("w");
+
+            TextField xField = new TextField(((Quaternionf)value).x + "");
+
+            xField.textProperty().addListener((observable, oldValue, newValue) -> {
+                try {
+                    Field f = parentComp.getClass().getDeclaredField(fieldName);
+                    f.setAccessible(true);
+                    Quaternionf vec = (Quaternionf) f.get(parentComp);
+                    vec.x = Float.parseFloat(newValue);
+                    f.set(parentComp, vec);
+
+                } catch (Exception ignore){}
+            });
+            TextField yField = new TextField(((Quaternionf)value).y + "");
+            yField.textProperty().addListener((observable, oldValue, newValue) -> {
+                try {
+                    Field f = parentComp.getClass().getDeclaredField(fieldName);
+                    f.setAccessible(true);
+                    Quaternionf vec = (Quaternionf) f.get(parentComp);
+                    vec.y = Float.parseFloat(newValue);
+                    f.set(parentComp, vec);
+
+                } catch (Exception ignore){}
+            });
+
+            TextField zField = new TextField(((Quaternionf)value).z + "");
+            zField.textProperty().addListener((observable, oldValue, newValue) -> {
+                try {
+                    Field f = parentComp.getClass().getDeclaredField(fieldName);
+                    f.setAccessible(true);
+                    Quaternionf vec = (Quaternionf) f.get(parentComp);
+                    vec.z = Float.parseFloat(newValue);
+                    f.set(parentComp, vec);
+
+                } catch (Exception ignore){}
+            });
+
+            TextField wField = new TextField(((Quaternionf)value).w + "");
+            zField.textProperty().addListener((observable, oldValue, newValue) -> {
+                try {
+                    Field f = parentComp.getClass().getDeclaredField(fieldName);
+                    f.setAccessible(true);
+                    Quaternionf vec = (Quaternionf) f.get(parentComp);
+                    vec.w = Float.parseFloat(newValue);
+                    f.set(parentComp, vec);
+
+                } catch (Exception ignore){}
+            });
+
+            xField.setPrefWidth(65);
+            yField.setPrefWidth(65);
+            zField.setPrefWidth(65);
+            wField.setPrefWidth(65);
+
+            hbox.getChildren().addAll(x, xField, y, yField, z, zField, w, wField);
+            n = hbox;
+        }
         else if(value instanceof String){
             n = new TextField((String)value);
             n.setTranslateX(textFieldOffset);
@@ -226,12 +292,6 @@ public class ComponentField extends GridPane {
             converted = ((Boolean)value).toString();
         }else if(value instanceof String){
             converted = (String)value;
-        }
-        else if (value instanceof Vector3f){
-            converted = value.toString();
-        }
-        else if (value instanceof Vector2f){
-            converted = value.toString();
         }
         else {
             converted = value.toString();

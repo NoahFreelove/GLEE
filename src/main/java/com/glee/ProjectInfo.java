@@ -5,8 +5,9 @@ import java.io.FileReader;
 import java.nio.file.Paths;
 
 public class ProjectInfo {
-    public String name;
-    public String sourcePath;
+    public String name = "";
+    public String sourcePath = "";
+    public String binPath = "";
 
     private File projectFile;
 
@@ -29,6 +30,9 @@ public class ProjectInfo {
                 }
                 if(formatted[0].equals("source")){
                     sourcePath = path + "\\" + formatted[1];
+                }
+                if(formatted[0].equals("bin")){
+                    binPath = path + "\\" + formatted[1];
                 }
             }
         }catch (Exception ignore){}

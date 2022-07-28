@@ -1,11 +1,8 @@
 package com.glee;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.RandomAccessFile;
-import java.nio.MappedByteBuffer;
-import java.nio.channels.FileChannel;
+import javafx.application.Platform;
+
+import java.io.*;
 
 public class GLEngineConnection {
     public static String readData = "";
@@ -19,8 +16,8 @@ public class GLEngineConnection {
         Thread runThread = new Thread(() -> {
             try {
                 while(true){
-                    Thread.sleep(1000);
-                    readFile();
+                    Thread.sleep(250);
+                    Platform.runLater(GLEngineConnection::readFile);
                 }
             }catch (Exception e){
                 System.out.println(e);
@@ -31,17 +28,18 @@ public class GLEngineConnection {
 
     private static void readFile() {
         try {
-            RandomAccessFile file = new RandomAccessFile(filePath + "/from", "r");
-            FileChannel channel = file.getChannel();
-            MappedByteBuffer buffer = channel.map(FileChannel.MapMode.READ_ONLY, 0, channel.size());
+            FileReader fileReader = new FileReader(filePath + "/from");
             StringBuilder sb = new StringBuilder();
 
-            while (buffer.hasRemaining()) {
-                sb.append((char) buffer.get());
+            while (fileReader.ready()) {
+                sb.append((char) fileReader.read());
             }
-            readData = sb.toString();
-
-            file.close();
+            if(sb.toString().contains("SELECTED:")){
+                readData = sb.toString().replace("SELECTED:","");
+                Editor.inspectorPanel.setSelectedObject(Integer.parseInt(readData));
+            }
+            fileReader.close();
+            writeFile("","from");
         }
         catch (Exception e){
             System.out.println(e.getMessage());
@@ -50,7 +48,8 @@ public class GLEngineConnection {
 
     public static void writeFile(String text, String ToOrFrom){
         try {
-            FileWriter fw = new FileWriter(filePath + "/"+ToOrFrom);
+
+            FileWriter fw = new FileWriter(new File(filePath + "/"+ToOrFrom).getAbsolutePath().trim());
             fw.write(text);
             fw.close();
         }catch (Exception e){

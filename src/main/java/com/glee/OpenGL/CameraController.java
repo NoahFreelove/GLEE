@@ -7,6 +7,8 @@ import GLEngine.Core.Objects.Components.Component;
 import GLEngine.Core.Objects.Components.Rendering.Camera;
 import GLEngine.Core.Objects.GameObject;
 import GLEngine.Core.Window;
+import GLEngine.Core.Worlds.WorldManager;
+import com.glee.GLEngineConnection;
 import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 
@@ -34,7 +36,7 @@ public class CameraController extends Component {
             @Override
             public void mousePressed(int button) {
                 if(button == GLFW_MOUSE_BUTTON_1){
-                    Raycast(camRef.RayCastHitObject(30));
+                    Raycast(camRef.RayCastHitObject(50));
                 }
             }
             @Override
@@ -103,10 +105,20 @@ public class CameraController extends Component {
         speed = (glfwGetKey( window, GLFW_KEY_LEFT_SHIFT ) == GLFW_PRESS)? sprintSpeed : baseSpeed;
     }
 
-
     private void Raycast(GameObject object){
         if(GameObject.isValid(object)){
-            System.out.println("You Hit:" + object.getIdentity().getName());
+            int goIndex = 0;
+
+            for (GameObject go :
+                    WorldManager.getCurrentWorld().GameObjects()) {
+                if(object == go){
+                    break;
+                }
+                goIndex++;
+            }
+            System.out.println(goIndex);
+
+            GLEngineConnection.writeFile("SELECTED:" + goIndex, "from");
         }
     }
 }

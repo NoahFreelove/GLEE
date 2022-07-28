@@ -3,12 +3,14 @@ package com.glee.Panels;
 import com.glee.Editor;
 import com.glee.GLEngineConnection;
 import com.glee.WorldSaver;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 
 import java.io.File;
 
+import static com.glee.Editor.projectInfo;
 import static com.glee.Main.openProjectDialog;
 
 public class EditorToolbar extends MenuBar {
@@ -52,7 +54,7 @@ public class EditorToolbar extends MenuBar {
 
     private void preview(){
         WorldSaver.saveWorld(System.getenv("APPDATA") + "/GLEngine/temp");
-        GLEngineConnection.writeFile("FP:" + System.getenv("APPDATA") + "/GLEngine/temp", "to");
+        GLEngineConnection.writeFile("FP:" + System.getenv("APPDATA") + "/GLEngine/temp" + "\nBIN:" + new File(projectInfo.binPath).getAbsolutePath(), "to");
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("GLEE");

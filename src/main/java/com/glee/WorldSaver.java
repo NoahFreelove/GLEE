@@ -5,6 +5,7 @@ import GLEngine.Core.Objects.Components.Component;
 import GLEngine.Core.Objects.GameObject;
 import GLEngine.Core.Objects.GameObjectSaveData;
 import GLEngine.Core.Objects.Transform;
+import org.joml.Quaternionf;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
@@ -84,6 +85,9 @@ public class WorldSaver {
         else if (o instanceof Vector2f v)
         {
             return v.x + "f," + v.y + "f";
+        }
+        else if (o instanceof Quaternionf v){
+            return v.x() + "f," + v.y() + "f," + v.z() + "f," + v.w() +"f";
         }
         else if (o instanceof Boolean b)
         {

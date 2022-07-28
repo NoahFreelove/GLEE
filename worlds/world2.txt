@@ -5,9 +5,9 @@ ROT (0,0,0)
 
 SCA (10,1,10)
 
-MOD "bin/cube.obj"
+MOD "cube.obj"
 
-TEX "bin/wall.png"
+TEX "wall.png"
 
 NAME Floor
 
@@ -20,9 +20,9 @@ ROT (0,0,0)
 
 SCA (1,10,10)
 
-MOD "bin/cube.obj"
+MOD "cube.obj"
 
-TEX "bin/wall.png"
+TEX "wall.png"
 
 NAME Left Wall
 
@@ -36,9 +36,9 @@ ROT (0,0,0)
 
 SCA (1,10,10)
 
-MOD "bin/cube.obj"
+MOD "cube.obj"
 
-TEX "bin/wall.png"
+TEX "wall.png"
 
 NAME Right Wall
 ///END GAMEOBJECT///
@@ -50,15 +50,15 @@ ROT (0,0,0)
 
 SCA (0.5,0.2,1)
 
-MOD "bin/cube.obj"
+MOD "cube.obj"
 
-TEX "bin/wall.png"
+TEX "wall.png"
 
 NAME SPECIAL
 
 ///COMP///
 CLASS "com.glee.TestComponents.RegisterTest"
-FIELD "Position":5f,5f,25f:Vector3f
+FIELD "Quat":0.5f,1f,1.5f,2f:Quaternionf
 ///END COMP///
 
 ///COMP///

@@ -35,6 +35,7 @@ public class Editor {
 
     public static void openEditor(File openFile){
         projectFile = openFile;
+        projectInfo = new ProjectInfo(openFile);
         GLEngineConnection.initializeConnection();
         GLEngineConnection.startReadingFile();
 
@@ -105,7 +106,7 @@ public class Editor {
         activeWorld = w;
         refresh();
         inspectorPanel.setSelectedObject(0);
-        GLEngineConnection.writeFile("FP:" + worldFile.getAbsolutePath(), "to");
+        GLEngineConnection.writeFile("FP:" + worldFile.getAbsolutePath()+"\nBIN:" + new File(projectInfo.binPath).getAbsolutePath(), "to");
 
     }
 

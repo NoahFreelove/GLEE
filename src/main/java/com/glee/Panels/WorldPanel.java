@@ -42,9 +42,10 @@ public class WorldPanel extends GridPane {
         this.add(sp, 0, 1);
 
         //foreach file in directory
-        String dir = Editor.projectInfo.sourcePath + "/";
-        File folder = new File(dir);
-        File[] files = folder.listFiles();
+        String dir = Editor.projectInfo.sourcePath;
+
+        System.out.println(new File(dir));
+        File[] files = new File(new File(dir).getParent()).listFiles();
         if(files == null)
             return;
 

@@ -2,8 +2,8 @@
 POS (0.0,-4.0,0.0)
 ROT (0.0,0.0,0.0)
 SCA (10.0,1.0,10.0)
-MOD "bin/cube.obj"
-TEX "bin/wall.png"
+MOD "cube.obj"
+TEX "wall.png"
 NAME GameObject
 TAG Tag
 ///END GAMEOBJECT///
@@ -12,8 +12,8 @@ TAG Tag
 POS (-11.0,5.0,0.0)
 ROT (0.0,0.0,0.0)
 SCA (1.0,10.0,10.0)
-MOD "bin/cube.obj"
-TEX "bin/wall.png"
+MOD "cube.obj"
+TEX "wall.png"
 NAME GameObject
 TAG Tag
 ///END GAMEOBJECT///
@@ -22,8 +22,8 @@ TAG Tag
 POS (11.0,5.0,0.0)
 ROT (0.0,0.0,0.0)
 SCA (1.0,10.0,10.0)
-MOD "bin/cube.obj"
-TEX "bin/wall.png"
+MOD "cube.obj"
+TEX "wall.png"
 NAME GameObject
 TAG Tag
 ///END GAMEOBJECT///
@@ -32,8 +32,8 @@ TAG Tag
 POS (1.0,-3.0,0.0)
 ROT (0.0,0.0,0.0)
 SCA (0.5,0.2,1.0)
-MOD "bin/cube.obj"
-TEX "bin/wall.png"
+MOD "cube.obj"
+TEX "wall.png"
 NAME GameObject
 TAG Tag
 ///END GAMEOBJECT///
@@ -42,8 +42,8 @@ TAG Tag
 POS (2.0,-2.8,0.0)
 ROT (0.0,0.0,0.0)
 SCA (0.5,0.2,1.0)
-MOD "bin/cube.obj"
-TEX "bin/wall.png"
+MOD "cube.obj"
+TEX "wall.png"
 NAME GameObject
 TAG Tag
 ///END GAMEOBJECT///
@@ -52,8 +52,8 @@ TAG Tag
 POS (3.0,-2.6,0.0)
 ROT (0.0,0.0,0.0)
 SCA (0.5,0.2,1.0)
-MOD "bin/cube.obj"
-TEX "bin/wall.png"
+MOD "cube.obj"
+TEX "wall.png"
 NAME GameObject
 TAG Tag
 ///END GAMEOBJECT///
@@ -62,8 +62,8 @@ TAG Tag
 POS (4.0,-2.4,0.0)
 ROT (0.0,0.0,0.0)
 SCA (0.5,0.2,1.0)
-MOD "bin/cube.obj"
-TEX "bin/wall.png"
+MOD "cube.obj"
+TEX "wall.png"
 NAME GameObject
 TAG Tag
 ///END GAMEOBJECT///
@@ -72,8 +72,8 @@ TAG Tag
 POS (5.0,-2.2,0.0)
 ROT (0.0,0.0,0.0)
 SCA (0.5,0.2,1.0)
-MOD "bin/cube.obj"
-TEX "bin/wall.png"
+MOD "cube.obj"
+TEX "wall.png"
 NAME SPECIAL
 TAG Tag
 

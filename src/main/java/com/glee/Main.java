@@ -1,6 +1,7 @@
 package com.glee;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -17,7 +18,6 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) {
         mainStage = stage;
-
         Group root = new Group();
         Scene empty = new Scene(root, 400, 400);
         empty.setFill(Color.BLACK);
@@ -27,10 +27,8 @@ public class Main extends Application {
         mainStage.show();
         stage.addEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, windowEvent -> System.exit(0));
 
-        //loadMenu();
-        Editor.openEditor(Editor.projectFile);
-
-
+        loadMenu();
+        //Editor.openEditor(Editor.projectFile);
     }
 
     public static void loadMenu(){
