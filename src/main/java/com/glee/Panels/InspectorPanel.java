@@ -13,6 +13,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import org.joml.*;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -155,7 +156,6 @@ public class InspectorPanel extends GridPane {
             Button pasteComponentButton = new Button("Paste Values");
             pasteComponentButton.setOnMouseClicked(mouseEvent -> pasteComponent(index, c));
 
-            operationsBox.getChildren().addAll(deleteButtonComp,new Text("       "),copyButtonComp, new Text("       "), pasteComponentButton);
             box.setStyle("-fx-padding: 0;");
             box.setFillWidth(true);
             box.setPrefWidth(400);
@@ -169,7 +169,10 @@ public class InspectorPanel extends GridPane {
                 for (Field f : componentFields) {
                     setObjectField(c, box, f);
                 }
+                operationsBox.getChildren().addAll(deleteButtonComp,new Text("       "));
+
             }
+            operationsBox.getChildren().addAll(copyButtonComp, new Text("       "), pasteComponentButton);
 
             box.getChildren().add(operationsBox);
 
@@ -234,7 +237,30 @@ public class InspectorPanel extends GridPane {
                                 Field privateField = copiedComponent.classType.getDeclaredFields()[i];
                                 privateField.setAccessible(true);
                                 //System.out.println("New value:" + f.get(c).toString());
-                                f.set(c, privateField.get(copiedComponent.component));
+
+                                // set field to new instance of copied component
+                                Object o = privateField.get(copiedComponent.component);
+                                if(o instanceof Vector3f)
+                                {
+                                    f.set(c, new Vector3f((Vector3f) o));
+                                }
+                                else if (o instanceof Vector2f){
+                                    f.set(c, new Vector2f((Vector2f) o));
+                                }
+                                else if (o instanceof Vector4f){
+                                    f.set(c, new Vector4f((Vector4f) o));
+                                }
+                                else if (o instanceof Quaternionf){
+                                    f.set(c, new Quaternionf((Quaternionf) o));
+                                }
+                                else if (o instanceof Matrix4f){
+                                    f.set(c, new Matrix4f((Matrix4f) o));
+                                }
+                                else if (o instanceof GLEngine.Core.Shaders.Color){
+                                    f.set(c, new  GLEngine.Core.Shaders.Color(( GLEngine.Core.Shaders.Color) o));
+                                }
+                                else
+                                    f.set(c, o);
                             }
                         } catch (Exception e) {
                             System.out.println("Error pasting component values: " + e.getMessage());

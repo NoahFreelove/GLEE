@@ -5,6 +5,7 @@ import GLEngine.Core.Objects.Components.Component;
 import GLEngine.Core.Objects.GameObject;
 import GLEngine.Core.Objects.GameObjectSaveData;
 import GLEngine.Core.Objects.Transform;
+import GLEngine.Core.Shaders.Color;
 import GLEngine.Core.Shaders.MeshRenderProperties;
 import org.joml.Quaternionf;
 import org.joml.Vector2f;
@@ -93,6 +94,9 @@ public class WorldSaver {
         }
         else if (o instanceof Quaternionf v){
             return v.x() + "f," + v.y() + "f," + v.z() + "f," + v.w() +"f";
+        }
+        else if(o instanceof Color c){
+            return c.R() + "f," + c.G() + "f," + c.B() + "f," + c.A() + "f";
         }
         else if (o instanceof Boolean b)
         {

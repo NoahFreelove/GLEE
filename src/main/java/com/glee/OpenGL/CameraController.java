@@ -114,7 +114,6 @@ public class CameraController extends Component {
     private void Raycast(GameObject object){
         if(GameObject.isValid(object)){
             int goIndex = 0;
-
             for (GameObject go :
                     WorldManager.getCurrentWorld().GameObjects()) {
                 if(object == go){
@@ -122,8 +121,6 @@ public class CameraController extends Component {
                 }
                 goIndex++;
             }
-            System.out.println(goIndex);
-
             GLEngineConnection.writeFile("SELECTED:" + goIndex, "from");
         }
     }

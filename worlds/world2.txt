@@ -43,6 +43,7 @@ FIELD "floatTest":1.0:Float
 FIELD "stringTest"::String
 FIELD "boolValue":false:Boolean
 FIELD "quaternionTest":0.0f,0.0f,0.0f,0.0f:Quaternionf
+FIELD "colorTest":1.0f,0.7293801f,0.6f,0.6f:Color
 FIELD "enabled":true:boolean
 ///END COMP///
 
@@ -52,6 +53,13 @@ CLASS "GLEngine.Core.Objects.Components.Physics.Rigidbody"
 FIELD "dimensions":1.0f,1.0f,1.0f:Vector3f
 FIELD "mass":1.0:Float
 FIELD "stepThreshold":0.5:Float
+FIELD "enabled":true:boolean
+///END COMP///
+
+
+///COMP///
+CLASS "GLEngine.Core.Objects.Components.Colliders.BoxCollider"
+FIELD "dimensions":1.0f,1.0f,1.0f:Vector3f
 FIELD "enabled":true:boolean
 ///END COMP///
 
