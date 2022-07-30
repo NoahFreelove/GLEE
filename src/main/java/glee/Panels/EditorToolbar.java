@@ -54,7 +54,7 @@ public class EditorToolbar extends MenuBar {
 
     private void preview(){
         WorldSaver.saveWorld(System.getenv("APPDATA") + "/GLEngine/temp");
-        GLEngineConnection.writeFile("FP:" + System.getenv("APPDATA") + "/GLEngine/temp" + "\nBIN:" + new File(projectInfo.binPath).getAbsolutePath(), "to");
+        GLEngineConnection.writeFile("FP:" + System.getenv("APPDATA") + "/GLEngine/temp" + "\nBIN:" + new File(projectInfo.binPath).getAbsolutePath() + "/", "to");
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("GLEE");

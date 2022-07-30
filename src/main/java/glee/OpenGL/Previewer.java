@@ -58,7 +58,7 @@ public class Previewer {
         w.Add(cameraObject);
         for (GameObject go :
                 WorldManager.getCurrentWorld().GameObjects()) {
-            go.Created();
+            go.OnCreated();
         }
     }
 
@@ -78,7 +78,7 @@ public class Previewer {
 
         for (GameObject go :
                 WorldManager.getCurrentWorld().GameObjects()) {
-            go.Created();
+            go.OnCreated();
         }
     }
 }

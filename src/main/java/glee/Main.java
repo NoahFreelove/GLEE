@@ -26,8 +26,8 @@ public class Main extends Application {
         mainStage.show();
         stage.addEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, windowEvent -> System.exit(0));
 
-        //loadMenu();
-        Editor.openEditor(Editor.projectFile);
+        loadMenu();
+        //Editor.openEditor(Editor.projectFile);
     }
 
     public static void loadMenu(){
