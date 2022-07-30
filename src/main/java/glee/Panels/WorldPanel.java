@@ -1,11 +1,8 @@
-package com.glee.Panels;
+package glee.Panels;
 
-import com.glee.Editor;
-import javafx.event.EventHandler;
+import glee.Editor;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Separator;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;

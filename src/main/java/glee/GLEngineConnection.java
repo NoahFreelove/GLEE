@@ -1,4 +1,4 @@
-package com.glee;
+package glee;
 
 import javafx.application.Platform;
 

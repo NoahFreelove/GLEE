@@ -1,4 +1,4 @@
-package com.glee;
+package glee;
 
 import java.io.File;
 import java.io.FileReader;

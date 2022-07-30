@@ -1,12 +1,11 @@
-package com.glee.Panels;
+package glee.Panels;
 
 import GLEngine.Core.Objects.GameObject;
 import GLEngine.Core.Objects.GameObjectSaveData;
 import GLEngine.Core.Objects.Identity;
 import GLEngine.Core.Objects.Transform;
 import GLEngine.Core.Shaders.MeshRenderProperties;
-import com.glee.Editor;
-import javafx.collections.ObservableList;
+import glee.Editor;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
@@ -14,9 +13,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import org.joml.Quaternionf;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 public class HierarchyPanel extends GridPane {

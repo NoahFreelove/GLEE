@@ -1,4 +1,4 @@
-package com.glee.OpenGL;
+package glee.OpenGL;
 
 import GLEngine.Core.Input.KeyEvent;
 import GLEngine.Core.Objects.Components.Rendering.Camera;
@@ -7,9 +7,7 @@ import GLEngine.Core.Window;
 import GLEngine.Core.Worlds.World;
 import GLEngine.Core.Worlds.WorldLoader;
 import GLEngine.Core.Worlds.WorldManager;
-import com.glee.Editor;
-import com.glee.GLEngineConnection;
-import org.joml.Vector3f;
+import glee.GLEngineConnection;
 
 import java.io.File;
 

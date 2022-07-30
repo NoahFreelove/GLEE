@@ -1,8 +1,8 @@
-package com.glee.Panels;
+package glee.Panels;
 
-import com.glee.Editor;
-import com.glee.GLEngineConnection;
-import com.glee.WorldSaver;
+import glee.Editor;
+import glee.GLEngineConnection;
+import glee.WorldSaver;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -10,8 +10,8 @@ import javafx.scene.control.MenuItem;
 
 import java.io.File;
 
-import static com.glee.Editor.projectInfo;
-import static com.glee.Main.openProjectDialog;
+import static glee.Editor.projectInfo;
+import static glee.Main.openProjectDialog;
 
 public class EditorToolbar extends MenuBar {
     public EditorToolbar() {

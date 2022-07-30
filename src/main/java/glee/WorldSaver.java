@@ -1,4 +1,4 @@
-package com.glee;
+package glee;
 
 import GLEngine.Core.Interfaces.EditorVisible;
 import GLEngine.Core.Objects.Components.Component;

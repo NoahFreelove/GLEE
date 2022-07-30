@@ -9,12 +9,12 @@ module com.glee.glee {
     requires vecmath;
     requires org.lwjgl.glfw;
 
-    opens com.glee to javafx.fxml;
-    exports com.glee;
-    exports com.glee.Panels;
-    opens com.glee.Panels to javafx.fxml;
-    opens com.glee.TestComponents to javafx.fxml;
-    exports com.glee.TestComponents;
+    opens glee to javafx.fxml;
+    exports glee;
+    exports glee.Panels;
+    opens glee.Panels to javafx.fxml;
+    opens glee.TestComponents to javafx.fxml;
+    exports glee.TestComponents;
     exports GLEngine.Core.Shaders;
     opens GLEngine.Core.Shaders to javafx.fxml;
 }

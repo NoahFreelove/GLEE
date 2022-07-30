@@ -1,4 +1,4 @@
-package com.glee.OpenGL;
+package glee.OpenGL;
 
 import GLEngine.Core.Input.Input;
 import GLEngine.Core.Input.KeyEvent;
@@ -9,7 +9,7 @@ import GLEngine.Core.Objects.GameObject;
 import GLEngine.Core.Objects.Models.RenderSettings;
 import GLEngine.Core.Window;
 import GLEngine.Core.Worlds.WorldManager;
-import com.glee.GLEngineConnection;
+import glee.GLEngineConnection;
 import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 
@@ -17,8 +17,6 @@ import java.nio.DoubleBuffer;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
-import static org.lwjgl.opengl.GL11.GL_FALSE;
-import static org.lwjgl.opengl.GL11.GL_TRUE;
 
 public class CameraController extends Component {
     private Camera camRef;

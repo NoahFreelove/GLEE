@@ -1,14 +1,14 @@
-package com.glee;
+package glee;
 
 import GLEngine.Core.Objects.Components.Physics.Rigidbody;
 import GLEngine.Core.Objects.GameObject;
 import GLEngine.Core.Worlds.World;
 import GLEngine.Core.Worlds.WorldLoader;
-import com.glee.Panels.EditorToolbar;
-import com.glee.Panels.HierarchyPanel;
-import com.glee.Panels.InspectorPanel;
-import com.glee.Panels.WorldPanel;
-import com.glee.TestComponents.RegisterTest;
+import glee.Panels.EditorToolbar;
+import glee.Panels.HierarchyPanel;
+import glee.Panels.InspectorPanel;
+import glee.Panels.WorldPanel;
+import glee.TestComponents.RegisterTest;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
@@ -17,7 +17,7 @@ import javafx.scene.paint.Color;
 
 import java.io.File;
 
-import static com.glee.Main.mainStage;
+import static glee.Main.mainStage;
 
 public class Editor {
     public static File projectFile = new File("default.glengine");

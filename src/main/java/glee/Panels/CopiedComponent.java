@@ -1,4 +1,4 @@
-package com.glee.Panels;
+package glee.Panels;
 
 import GLEngine.Core.Objects.Components.Component;
 

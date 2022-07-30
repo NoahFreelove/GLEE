@@ -1,11 +1,11 @@
-package com.glee.Panels;
+package glee.Panels;
 
 import GLEngine.Core.Interfaces.EditorVisible;
 import GLEngine.Core.Objects.Components.Component;
 import GLEngine.Core.Objects.GameObject;
 import GLEngine.Core.Objects.Transform;
-import com.glee.ComponentField;
-import com.glee.Editor;
+import glee.ComponentField;
+import glee.Editor;
 import GLEngine.Core.Shaders.MeshRenderProperties;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;

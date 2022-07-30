@@ -38,7 +38,7 @@ NAME SpecialObject
 TAG Tag
 
 ///COMP///
-CLASS "com.glee.TestComponents.RegisterTest"
+CLASS "glee.TestComponents.RegisterTest"
 FIELD "floatTest":1.0:Float
 FIELD "stringTest"::String
 FIELD "boolValue":false:Boolean
