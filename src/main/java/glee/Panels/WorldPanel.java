@@ -10,8 +10,20 @@ import javafx.scene.text.Text;
 import java.io.File;
 
 public class WorldPanel extends GridPane {
+    private File firstFile;
     public WorldPanel() {
         super();
+        createPanel();
+    }
+    public WorldPanel(boolean selectFirst){
+        super();
+        createPanel();
+        if(selectFirst && firstFile !=null){
+            Editor.loadWorld(firstFile, false);
+        }
+    }
+
+    private void createPanel(){
         this.setStyle("-fx-background-color: #3a3a3a;");
         this.setPrefSize(600, 150);
         this.setLayoutX(0);
@@ -48,7 +60,10 @@ public class WorldPanel extends GridPane {
 
             if (file.isFile()) {
                 Button fileText = new Button(file.getName());
-                fileText.setOnMouseClicked(mouseEvent -> Editor.loadWorld(file));
+                if(i == 0){
+                    firstFile = new File(file.getAbsolutePath());
+                }
+                fileText.setOnMouseClicked(mouseEvent -> Editor.loadWorld(file, true));
                 fileText.setMaxWidth(100);
                 fileText.setPrefWidth(100);
                 fileText.setTranslateX(10 + i%3 * 15);

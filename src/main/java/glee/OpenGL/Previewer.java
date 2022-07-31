@@ -48,6 +48,7 @@ public class Previewer {
         worldName = worldName.replace("\n","");
         binPath = binPath.replace("\n","");
         World w = WorldLoader.PreviewWorld(worldName, binPath);
+        Previewer.binPath = binPath;
         WorldManager.AddWorldToBuild(w);
         WorldManager.SwitchWorld(w);
         cameraObject = new GameObject();

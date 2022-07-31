@@ -100,7 +100,6 @@ public class InspectorPanel extends GridPane {
                     // Create instance of class without casting
                     if(constructor.newInstance() instanceof Component c){
                         selectedObject.addComponent(c);
-                        Editor.refresh();
                         setSelectedObject(currentSelection);
 
                         // set the last pane to expanded

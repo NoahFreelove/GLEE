@@ -54,7 +54,7 @@ public class Editor {
         });
 
         inspectorPanel = new InspectorPanel();
-        worldPanel = new WorldPanel();
+        worldPanel = new WorldPanel(true);
         hierarchyPanel = new HierarchyPanel();
         editorToolbar = new EditorToolbar();
 
@@ -97,13 +97,13 @@ public class Editor {
         mainStage.setTitle(titleText);
     }
 
-    public static void loadWorld(File worldFile){
+    public static void loadWorld(File worldFile, boolean refresh){
         World w = WorldLoader.DummyWorld(worldFile.getAbsolutePath());
         String[] fileParts = worldFile.getAbsolutePath().replace("\\", "/").split("/");
         worldName = fileParts[fileParts.length - 1].split("\\.")[0].replace("\n","");
         //System.out.println(worldName);
         activeWorld = w;
-        refresh();
+        if(refresh) refresh();
         inspectorPanel.setSelectedObject(0);
         GLEngineConnection.writeFile("FP:" + worldFile.getAbsolutePath()+"\nBIN:" + new File(projectInfo.binPath).getAbsolutePath(), "to");
     }
