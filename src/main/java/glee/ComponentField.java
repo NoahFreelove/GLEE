@@ -23,8 +23,8 @@ public class ComponentField extends GridPane {
     private Component parentComp;
     private float min;
     private float max;
+    private float customStep;
     private boolean intLock;
-    private boolean piLock;
     private boolean hasRangeAttributes;
     private String header = "";
     private String tooltip = "";
@@ -39,9 +39,9 @@ public class ComponentField extends GridPane {
             min = attributes.min();
             max = attributes.max();
             intLock = attributes.intLock();
-            piLock = attributes.piLock();
             header = attributes.header();
             tooltip = attributes.tooltip();
+            customStep = attributes.step();
 
             if(min == Float.MIN_VALUE && max == Float.MAX_VALUE){
                 hasRangeAttributes = false;
@@ -196,7 +196,9 @@ public class ComponentField extends GridPane {
                     if(Float.parseFloat(newValue) >= min && Float.parseFloat(newValue) <= max){
                         Field f = parentComp.getClass().getDeclaredField(fieldName);
                         f.setAccessible(true);
-                        f.set(parentComp, Float.parseFloat(newValue));
+
+                        f.set(parentComp, intLock? fv : Float.parseFloat(newValue));
+                        //slider.setValue(intLock? fv : Float.parseFloat(newValue));
                     }
 
                 }catch (Exception ignore){}
@@ -214,9 +216,14 @@ public class ComponentField extends GridPane {
             slider.valueProperty().addListener(event -> {
                 try {
                     float newValue = (float)slider.getValue();
-                    if(piLock){
-                        newValue = (float) ((float)Math.round(newValue / Math.PI * 4) * Math.PI / 4);
-                        slider.setValue(Double.parseDouble(new DecimalFormat("###.##").format(newValue)));
+                    if(customStep != 0){
+                        newValue = ((float)Math.floor(newValue / customStep) * customStep);
+                        double newDoub = Double.parseDouble(new DecimalFormat("###.##").format(newValue));
+                        if(newDoub < min)
+                            newDoub = min;
+                        if(newDoub > max)
+                            newDoub = max;
+                        slider.setValue(newDoub);
                     }
                     else if(intLock)
                     {
@@ -250,7 +257,7 @@ public class ComponentField extends GridPane {
             t.textProperty().addListener((observable, oldValue, newValue) -> {
                 try {
                     Field f = parentComp.getClass().getField(fieldName);
-                    f.set(parentComp, Float.parseFloat(newValue));
+                    f.set(parentComp, intLock? fv : Float.parseFloat(newValue));
                 }catch (Exception ignore){}
             });
             n = t;
