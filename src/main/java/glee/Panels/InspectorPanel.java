@@ -1,5 +1,7 @@
 package glee.Panels;
 
+import GLEngine.Core.Interfaces.EditorName;
+import GLEngine.Core.Interfaces.EditorRange;
 import GLEngine.Core.Interfaces.EditorVisible;
 import GLEngine.Core.Objects.Components.Component;
 import GLEngine.Core.Objects.GameObject;
@@ -281,12 +283,28 @@ public class InspectorPanel extends GridPane {
                 Object obj = f.get(c);
                 if(obj == null)
                     return;
-                ComponentField item = new ComponentField(f.getName(), obj.getClass().getSimpleName(), obj, modifiers, c);
+                String name = f.getName();
+                name = name.substring(0, 1).toUpperCase() + name.substring(1);
+                name = name.replaceAll("(.)([ A-Z])", "$1 $2");
+                if(f.isAnnotationPresent(EditorName.class)){
+                    name = f.getAnnotation(EditorName.class).name();
+                }
+                float min = Float.NEGATIVE_INFINITY;
+                float max = Float.POSITIVE_INFINITY;
+                boolean intLock = false;
+
+                if(f.isAnnotationPresent(EditorRange.class)){
+                    min = f.getAnnotation(EditorRange.class).min();
+                    max = f.getAnnotation(EditorRange.class).max();
+                    intLock = f.getAnnotation(EditorRange.class).intLock();
+                }
+
+                ComponentField item = new ComponentField(name, f.getName(), obj.getClass().getSimpleName(), obj, modifiers, c, min, max, intLock);
                 box.getChildren().add(item);
             }
         }
         catch (Exception e){
-            System.out.println("Cannot load component field:" + e.getMessage());
+            System.out.println("Cannot load component field:" + e);
         }
     }
 }

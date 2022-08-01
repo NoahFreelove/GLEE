@@ -13,6 +13,7 @@ import org.joml.Vector3f;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.text.DecimalFormat;
 
 public class ComponentField extends GridPane {
     private Text componentName;
@@ -20,10 +21,16 @@ public class ComponentField extends GridPane {
     private HBox valueBox;
     private Text valueText;
     private Component parentComp;
+    private float min;
+    private float max;
+    private boolean intLock;
 
     private double fieldOffset = 12;
-    public ComponentField(String name, String type, Object value, int modifiers, Component parentComp){
+    public ComponentField(String name, String originalName, String type, Object value, int modifiers, Component parentComp, float bottomRange, float topRange, boolean intLock) {
         super();
+        this.min = bottomRange;
+        this.max = topRange;
+        this.intLock = intLock;
         this.setStyle("-fx-background-color: #868686;");
         this.setPrefSize(250, 50);
         this.setLayoutX(350);
@@ -50,7 +57,7 @@ public class ComponentField extends GridPane {
         this.add(componentName, 0, 0);
         this.add(componentType, 0, 2);
         valueBox = new HBox();
-        Node valueNode = generateSpecificField(value, name);
+        Node valueNode = generateSpecificField(value, originalName);
         valueBox.getChildren().add(valueNode);
 
         this.add(valueBox, 0, 1);
@@ -59,8 +66,7 @@ public class ComponentField extends GridPane {
         valueText.setStyle("-fx-font-size: 15px;");
 
         String modifierStr = generateModifierString(modifiers);
-        name = name.substring(0, 1).toUpperCase() + name.substring(1);
-        componentName.setText(name.replaceAll("(.)([ A-Z])", "$1 $2"));
+        componentName.setText(name);
         componentType.setText(type + " :" + modifierStr);
         // add spacer
         Separator spacer = new Separator();
@@ -71,16 +77,80 @@ public class ComponentField extends GridPane {
 
     private Node generateSpecificField(Object value, String fieldName) {
         Node n;
-        if(value instanceof Integer || value instanceof Float){
-            n = new TextField(value.toString());
-            n.setTranslateX(fieldOffset);
-            // Set value after finishing typing
-            ((TextField)n).textProperty().addListener((observable, oldValue, newValue) -> {
-                try {
-                    Field f = parentComp.getClass().getField(fieldName);
-                    f.set(parentComp, Float.parseFloat(newValue));
-                }catch (Exception ignore){}
-            });
+        DecimalFormat df = new DecimalFormat("#.######");
+
+        if(value instanceof Float fv){
+            if(max != Float.POSITIVE_INFINITY || min != Float.NEGATIVE_INFINITY){
+                HBox container = new HBox();
+                Text minText = new Text(min + "  ");
+                minText.setFill(Color.WHITE);
+                Text maxText = new Text("  " + max);
+                maxText.setFill(Color.WHITE);
+
+                Slider slider = new Slider();
+
+                TextField valueField = new TextField(df.format(fv));
+                valueField.setPrefWidth(100);
+                valueField.textProperty().addListener((observable, oldValue, newValue) -> {
+                    try {
+                        if(Float.parseFloat(newValue) >= min && Float.parseFloat(newValue) <= max){
+                            Field f = parentComp.getClass().getDeclaredField(fieldName);
+                            f.setAccessible(true);
+                            f.set(parentComp, Float.parseFloat(newValue));
+                        }
+
+                    }catch (Exception ignore){}
+                });
+                slider.setMin(min);
+                slider.setMax(max);
+                slider.setValue((float)value);
+                slider.setTranslateX(fieldOffset);
+                slider.setTranslateY(fieldOffset);
+                slider.setPrefWidth(200);
+                slider.setPrefHeight(30);
+
+                // set slider progress
+                slider.setValue(fv);
+                slider.valueProperty().addListener(event -> {
+                    try {
+                        float newValue = (float)slider.getValue();
+                        if(intLock)
+                        {
+                            newValue = (int)newValue;
+                            slider.setValue(newValue);
+                        }
+
+                        Field f = parentComp.getClass().getDeclaredField(fieldName);
+                        f.setAccessible(true);
+                        f.set(parentComp, newValue);
+                        valueField.setText(df.format(newValue));
+                    }
+                    catch (Exception ignore){
+                        System.out.println(ignore);
+                    }
+                });
+
+                container.getChildren().addAll(minText, valueField, maxText, slider);
+
+
+                n = container;
+            }
+            else{
+
+                TextField t = new TextField(value.toString());
+                t.setTranslateX(fieldOffset);
+                // Set value after finishing typing
+                t.textProperty().addListener((observable, oldValue, newValue) -> {
+                    try {
+                        Field f = parentComp.getClass().getField(fieldName);
+                        f.set(parentComp, Float.parseFloat(newValue));
+                    }catch (Exception ignore){}
+                });
+                n = t;
+            }
+        }
+        else if(value instanceof Integer iv){
+            n = generateInt(value, fieldName, iv);
         }
         else if(value instanceof Boolean){
             n = new CheckBox();
@@ -135,6 +205,77 @@ public class ComponentField extends GridPane {
                     f.set(parentComp, newValue);
                 } catch (Exception ignore){}
             });
+        }
+        return n;
+    }
+
+    private Node generateInt(Object value, String fieldName, Integer iv) {
+        Node n;
+        if(max != Float.POSITIVE_INFINITY || min != Float.NEGATIVE_INFINITY) {
+            HBox container = new HBox();
+            Text minText = new Text(min + "  ");
+            minText.setFill(Color.WHITE);
+            Text maxText = new Text("  " + max);
+            maxText.setFill(Color.WHITE);
+
+            Slider slider = new Slider();
+
+            TextField valueField = new TextField(String.valueOf(iv));
+            valueField.setPrefWidth(100);
+            valueField.textProperty().addListener((observable, oldValue, newValue) -> {
+                try {
+                    if (Float.parseFloat(newValue) >= min && Integer.parseInt(newValue) <= max) {
+                        Field f = parentComp.getClass().getDeclaredField(fieldName);
+                        f.setAccessible(true);
+                        f.set(parentComp, Float.parseFloat(newValue));
+                    }
+
+                } catch (Exception ignore) {
+                }
+            });
+            slider.setMin(Math.floor(min));
+            slider.setMax(Math.floor(max));
+            slider.setValue((int) value);
+            slider.setTranslateX(fieldOffset);
+            slider.setTranslateY(fieldOffset);
+            slider.setPrefWidth(200);
+            slider.setPrefHeight(30);
+            slider.setBlockIncrement(1);
+
+            // set slider progress
+            slider.setValue(iv);
+            slider.valueProperty().addListener((event, oldval, newval) -> {
+                slider.setValue(newval.intValue());
+                if(oldval.intValue() != (int)slider.getValue()){
+                    try {
+                        int newValue = (int) slider.getValue();
+                        Field f = parentComp.getClass().getDeclaredField(fieldName);
+                        f.setAccessible(true);
+                        f.set(parentComp, newValue);
+                        valueField.setText(newValue + "");
+                    } catch (Exception ignore) {
+                        System.out.println(ignore);
+                    }
+                }
+            });
+
+            container.getChildren().addAll(minText, valueField, maxText, slider);
+
+
+            n = container;
+        }
+        else{
+
+            TextField t = new TextField(value.toString());
+            t.setTranslateX(fieldOffset);
+            // Set value after finishing typing
+            t.textProperty().addListener((observable, oldValue, newValue) -> {
+                try {
+                    Field f = parentComp.getClass().getField(fieldName);
+                    f.set(parentComp, Integer.parseInt(newValue));
+                }catch (Exception ignore){}
+            });
+            n = t;
         }
         return n;
     }
