@@ -1,5 +1,6 @@
 package glee;
 
+import GLEngine.Core.Interfaces.EditorVariableAttribute;
 import GLEngine.Core.Objects.Components.Component;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -19,18 +20,34 @@ public class ComponentField extends GridPane {
     private Text componentName;
     private Text componentType;
     private HBox valueBox;
-    private Text valueText;
     private Component parentComp;
     private float min;
     private float max;
     private boolean intLock;
+    private boolean piLock;
+    private boolean hasRangeAttributes;
+    private String header = "";
+    private String tooltip = "";
 
     private double fieldOffset = 12;
-    public ComponentField(String name, String originalName, String type, Object value, int modifiers, Component parentComp, float bottomRange, float topRange, boolean intLock) {
+    public ComponentField(String name, String originalName, String type, Object value, int modifiers, Component parentComp, EditorVariableAttribute attributes) {
         super();
-        this.min = bottomRange;
-        this.max = topRange;
-        this.intLock = intLock;
+
+        if(attributes != null)
+        {
+            hasRangeAttributes = true;
+            min = attributes.min();
+            max = attributes.max();
+            intLock = attributes.intLock();
+            piLock = attributes.piLock();
+            header = attributes.header();
+            tooltip = attributes.tooltip();
+
+            if(min == Float.MIN_VALUE && max == Float.MAX_VALUE){
+                hasRangeAttributes = false;
+            }
+        }
+
         this.setStyle("-fx-background-color: #868686;");
         this.setPrefSize(250, 50);
         this.setLayoutX(350);
@@ -38,32 +55,42 @@ public class ComponentField extends GridPane {
         this.parentComp = parentComp;
 
         //increase vertical max height
-        this.setPrefHeight(100);
+        this.setPrefHeight(80);
         this.setPadding(new javafx.geometry.Insets(5,0,5,0));
+        if(header.equals("")){
+            this.setPrefHeight(80);
+        }
+        else {
+            this.setPrefHeight(110);
+            Text headerText = new Text(header);
+            headerText.setFill(Color.WHITE);
+            headerText.setStyle("-fx-font-size: 18px;");
+            this.add(headerText, 0, 0);
+        }
 
         componentName = new Text();
         componentType = new Text();
-        valueText = new Text(convertValueToString(value));
 
         componentName.setFill(Color.WHITE);
         componentType.setFill(Color.WHITE);
-        valueText.setFill(Color.BLACK);
 
         componentName.setTranslateX(10);
         componentType.setTranslateX(10);
         componentType.setTranslateY(10);
-        valueText.setTranslateX(10);
 
-        this.add(componentName, 0, 0);
-        this.add(componentType, 0, 2);
+        this.add(componentName, 0, 1);
+        //this.add(componentType, 1, 0);
         valueBox = new HBox();
         Node valueNode = generateSpecificField(value, originalName);
         valueBox.getChildren().add(valueNode);
 
-        this.add(valueBox, 0, 1);
-        componentName.setStyle("-fx-font-size: 20px;");
-        componentType.setStyle("-fx-font-size: 15px;");
-        valueText.setStyle("-fx-font-size: 15px;");
+        // Make text take up less space
+        componentName.setWrappingWidth(200);
+        componentType.setWrappingWidth(200);
+
+        this.add(valueBox, 0,2);
+        componentName.setStyle("-fx-font-size: 10px;");
+        componentType.setStyle("-fx-font-size: 10px;");
 
         String modifierStr = generateModifierString(modifiers);
         componentName.setText(name);
@@ -77,77 +104,10 @@ public class ComponentField extends GridPane {
 
     private Node generateSpecificField(Object value, String fieldName) {
         Node n;
-        DecimalFormat df = new DecimalFormat("#.######");
+
 
         if(value instanceof Float fv){
-            if(max != Float.POSITIVE_INFINITY || min != Float.NEGATIVE_INFINITY){
-                HBox container = new HBox();
-                Text minText = new Text(min + "  ");
-                minText.setFill(Color.WHITE);
-                Text maxText = new Text("  " + max);
-                maxText.setFill(Color.WHITE);
-
-                Slider slider = new Slider();
-
-                TextField valueField = new TextField(df.format(fv));
-                valueField.setPrefWidth(100);
-                valueField.textProperty().addListener((observable, oldValue, newValue) -> {
-                    try {
-                        if(Float.parseFloat(newValue) >= min && Float.parseFloat(newValue) <= max){
-                            Field f = parentComp.getClass().getDeclaredField(fieldName);
-                            f.setAccessible(true);
-                            f.set(parentComp, Float.parseFloat(newValue));
-                        }
-
-                    }catch (Exception ignore){}
-                });
-                slider.setMin(min);
-                slider.setMax(max);
-                slider.setValue((float)value);
-                slider.setTranslateX(fieldOffset);
-                slider.setTranslateY(fieldOffset);
-                slider.setPrefWidth(200);
-                slider.setPrefHeight(30);
-
-                // set slider progress
-                slider.setValue(fv);
-                slider.valueProperty().addListener(event -> {
-                    try {
-                        float newValue = (float)slider.getValue();
-                        if(intLock)
-                        {
-                            newValue = (int)newValue;
-                            slider.setValue(newValue);
-                        }
-
-                        Field f = parentComp.getClass().getDeclaredField(fieldName);
-                        f.setAccessible(true);
-                        f.set(parentComp, newValue);
-                        valueField.setText(df.format(newValue));
-                    }
-                    catch (Exception ignore){
-                        System.out.println(ignore);
-                    }
-                });
-
-                container.getChildren().addAll(minText, valueField, maxText, slider);
-
-
-                n = container;
-            }
-            else{
-
-                TextField t = new TextField(value.toString());
-                t.setTranslateX(fieldOffset);
-                // Set value after finishing typing
-                t.textProperty().addListener((observable, oldValue, newValue) -> {
-                    try {
-                        Field f = parentComp.getClass().getField(fieldName);
-                        f.set(parentComp, Float.parseFloat(newValue));
-                    }catch (Exception ignore){}
-                });
-                n = t;
-            }
+            n = generateFloat(value, fieldName, fv);
         }
         else if(value instanceof Integer iv){
             n = generateInt(value, fieldName, iv);
@@ -184,14 +144,18 @@ public class ComponentField extends GridPane {
             n = generateQuaternion((Quaternionf) value, fieldName);
         }
         else if(value instanceof String){
-            n = new TextField((String)value);
-            n.setTranslateX(fieldOffset);
-            ((TextField)n).textProperty().addListener((observable, oldValue, newValue) -> {
+            TextField t = new TextField((String)value);
+            if(!tooltip.equals("")){
+                t.tooltipProperty().setValue(new Tooltip(tooltip));
+            }
+            t.setTranslateX(fieldOffset);
+            t.textProperty().addListener((observable, oldValue, newValue) -> {
                 try {
                     Field f = parentComp.getClass().getField(fieldName);
                     f.set(parentComp, newValue);
                 } catch (Exception ignore){}
             });
+            n = t;
         }
         else if(value instanceof GLEngine.Core.Shaders.Color c){
             n = generateColor(c, fieldName);
@@ -209,9 +173,94 @@ public class ComponentField extends GridPane {
         return n;
     }
 
+    private Node generateFloat(Object value, String fieldName, Float fv) {
+        Node n;
+        // Format pi to 2 decimals, everything else we just want 6 decimals
+        DecimalFormat df = new DecimalFormat("######.######");
+        if(hasRangeAttributes){
+            HBox container = new HBox();
+            Text minText = new Text(min + "  ");
+            minText.setFill(Color.WHITE);
+            Text maxText = new Text("  " + max);
+            maxText.setFill(Color.WHITE);
+
+            Slider slider = new Slider();
+
+            TextField valueField = new TextField(df.format(fv));
+            if(!tooltip.equals("")){
+                valueField.tooltipProperty().setValue(new Tooltip(tooltip));
+            }
+            valueField.setPrefWidth(100);
+            valueField.textProperty().addListener((observable, oldValue, newValue) -> {
+                try {
+                    if(Float.parseFloat(newValue) >= min && Float.parseFloat(newValue) <= max){
+                        Field f = parentComp.getClass().getDeclaredField(fieldName);
+                        f.setAccessible(true);
+                        f.set(parentComp, Float.parseFloat(newValue));
+                    }
+
+                }catch (Exception ignore){}
+            });
+            slider.setMin(min);
+            slider.setMax(max);
+            slider.setValue((float) value);
+            slider.setTranslateX(fieldOffset);
+            slider.setTranslateY(fieldOffset);
+            slider.setPrefWidth(200);
+            slider.setPrefHeight(30);
+
+            // set slider progress
+            slider.setValue(fv);
+            slider.valueProperty().addListener(event -> {
+                try {
+                    float newValue = (float)slider.getValue();
+                    if(piLock){
+                        newValue = (float) ((float)Math.round(newValue / Math.PI * 4) * Math.PI / 4);
+                        slider.setValue(Double.parseDouble(new DecimalFormat("###.##").format(newValue)));
+                    }
+                    else if(intLock)
+                    {
+                        newValue = (int)newValue;
+                        slider.setValue(newValue);
+                    }
+
+                    Field f = parentComp.getClass().getDeclaredField(fieldName);
+                    f.setAccessible(true);
+                    f.set(parentComp, newValue);
+                    valueField.setText(df.format(newValue));
+                }
+                catch (Exception ignore){
+                    System.out.println(ignore);
+                }
+            });
+
+            container.getChildren().addAll(minText, valueField, maxText, slider);
+
+
+            n = container;
+        }
+        else{
+
+            TextField t = new TextField(value.toString());
+            t.setTranslateX(fieldOffset);
+            if(!tooltip.equals("")){
+                t.tooltipProperty().setValue(new Tooltip(tooltip));
+            }
+            // Set value after finishing typing
+            t.textProperty().addListener((observable, oldValue, newValue) -> {
+                try {
+                    Field f = parentComp.getClass().getField(fieldName);
+                    f.set(parentComp, Float.parseFloat(newValue));
+                }catch (Exception ignore){}
+            });
+            n = t;
+        }
+        return n;
+    }
+
     private Node generateInt(Object value, String fieldName, Integer iv) {
         Node n;
-        if(max != Float.POSITIVE_INFINITY || min != Float.NEGATIVE_INFINITY) {
+        if(hasRangeAttributes) {
             HBox container = new HBox();
             Text minText = new Text(min + "  ");
             minText.setFill(Color.WHITE);
@@ -221,6 +270,9 @@ public class ComponentField extends GridPane {
             Slider slider = new Slider();
 
             TextField valueField = new TextField(String.valueOf(iv));
+            if(!tooltip.equals("")){
+                valueField.tooltipProperty().setValue(new Tooltip(tooltip));
+            }
             valueField.setPrefWidth(100);
             valueField.textProperty().addListener((observable, oldValue, newValue) -> {
                 try {
@@ -268,6 +320,9 @@ public class ComponentField extends GridPane {
 
             TextField t = new TextField(value.toString());
             t.setTranslateX(fieldOffset);
+            if(!tooltip.equals("")){
+                t.tooltipProperty().setValue(new Tooltip(tooltip));
+            }
             // Set value after finishing typing
             t.textProperty().addListener((observable, oldValue, newValue) -> {
                 try {
@@ -518,26 +573,6 @@ public class ComponentField extends GridPane {
 
         hbox.getChildren().addAll(x, xField, y, yField, z, zField, w, wField);
         return hbox;
-    }
-
-
-    private String convertValueToString(Object value){
-        String converted = "";
-
-        if(value instanceof Integer){
-            converted = ((Integer)value).toString();
-        }else if(value instanceof Float){
-            converted = value.toString();
-        }else if(value instanceof Boolean){
-            converted = ((Boolean)value).toString();
-        }else if(value instanceof String){
-            converted = (String)value;
-        }
-        else {
-            converted = value.toString();
-        }
-
-        return converted;
     }
 
     private String generateModifierString(int modifiers){

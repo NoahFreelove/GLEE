@@ -1,7 +1,7 @@
 package glee.Panels;
 
 import GLEngine.Core.Interfaces.EditorName;
-import GLEngine.Core.Interfaces.EditorRange;
+import GLEngine.Core.Interfaces.EditorVariableAttribute;
 import GLEngine.Core.Interfaces.EditorVisible;
 import GLEngine.Core.Objects.Components.Component;
 import GLEngine.Core.Objects.GameObject;
@@ -289,17 +289,8 @@ public class InspectorPanel extends GridPane {
                 if(f.isAnnotationPresent(EditorName.class)){
                     name = f.getAnnotation(EditorName.class).name();
                 }
-                float min = Float.NEGATIVE_INFINITY;
-                float max = Float.POSITIVE_INFINITY;
-                boolean intLock = false;
 
-                if(f.isAnnotationPresent(EditorRange.class)){
-                    min = f.getAnnotation(EditorRange.class).min();
-                    max = f.getAnnotation(EditorRange.class).max();
-                    intLock = f.getAnnotation(EditorRange.class).intLock();
-                }
-
-                ComponentField item = new ComponentField(name, f.getName(), obj.getClass().getSimpleName(), obj, modifiers, c, min, max, intLock);
+                ComponentField item = new ComponentField(name, f.getName(), obj.getClass().getSimpleName(), obj, modifiers, c, f.getAnnotation(EditorVariableAttribute.class));
                 box.getChildren().add(item);
             }
         }
