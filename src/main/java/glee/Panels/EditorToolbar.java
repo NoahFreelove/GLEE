@@ -3,12 +3,14 @@ package glee.Panels;
 import glee.Editor;
 import glee.GLEngineConnection;
 import glee.WorldSaver;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.*;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.function.Consumer;
 
 import static glee.Editor.projectInfo;
 import static glee.Main.openProjectDialog;
@@ -24,16 +26,37 @@ public class EditorToolbar extends MenuBar {
         Menu helpMenu = new Menu("Help");
 
         MenuItem newItem = new MenuItem("New World");
-        MenuItem openItem = new MenuItem("Open World");
-        openItem.setOnAction(event -> {
-            File file = openProjectDialog();
-            if(file != null){
-                Editor.openEditor(file);
-            }
+        newItem.setOnAction(actionEvent -> {
+            TextInputDialog dialog = new TextInputDialog("untitled" + (int)Math.floor(Math.random()*100));
+            dialog.setTitle("New World");
+            dialog.setHeaderText("New World");
+            dialog.setContentText("World Name:");
+
+            dialog.showAndWait().ifPresent(s -> {
+                String result = dialog.getEditor().getText();
+
+                if (result != null) {
+                    try {
+                        StringBuilder sb = new StringBuilder();
+                        sb.append(projectInfo.sourcePath.trim());
+                        sb.append(result.trim());
+                        sb.append(".txt");
+
+                        FileWriter fw = new FileWriter(sb.toString());
+                        fw.write("");
+                        fw.close();
+                    } catch (IOException e) {
+                        System.out.println(e.getMessage());
+                    }
+                }
+                Editor.refresh();
+            });
+
+
         });
+
         MenuItem saveItem = new MenuItem("Save World");
         saveItem.setOnAction(event -> Editor.saveEditor());
-        MenuItem saveAsItem = new MenuItem("Save World As");
         MenuItem exitItem = new MenuItem("Exit");
         exitItem.setOnAction(event -> System.exit(0));
 
@@ -45,7 +68,7 @@ public class EditorToolbar extends MenuBar {
 
         playMenu.getItems().add(previewWorldWithoutSaving);
 
-        fileMenu.getItems().addAll(newItem, openItem, saveItem, saveAsItem, exitItem);
+        fileMenu.getItems().addAll(newItem, saveItem, exitItem);
 
         viewMenu.getItems().add(refreshButton);
 
